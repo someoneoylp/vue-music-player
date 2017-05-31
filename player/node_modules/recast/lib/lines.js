@@ -71,6 +71,7 @@ function copyLineInfo(info) {
     return {
         line: info.line,
         indent: info.indent,
+        locked: info.locked,
         sliceStart: info.sliceStart,
         sliceEnd: info.sliceEnd
     };
@@ -134,6 +135,7 @@ function fromString(string, options) {
 
     var tabWidth = options && options.tabWidth;
     var tabless = string.indexOf("\t") < 0;
+    var locked = !! (options && options.locked);
     var cacheable = !options && tabless && (string.length <= maxCacheKeyLen);
 
     assert.ok(tabWidth || tabless, "No tab width specified but encountered tabs in string\n" + string);
@@ -146,6 +148,8 @@ function fromString(string, options) {
         return {
             line: line,
             indent: countSpaces(spaces, tabWidth),
+            // Boolean indicating whether this line can be reindented.
+            locked: locked,
             sliceStart: spaces.length,
             sliceEnd: line.length
         };
@@ -336,7 +340,7 @@ Lp.indent = function(by) {
     var secret = getSecret(this);
 
     var lines = new Lines(secret.infos.map(function(info) {
-        if (info.line) {
+        if (info.line && ! info.locked) {
             info = copyLineInfo(info);
             info.indent += by;
         }
@@ -364,7 +368,7 @@ Lp.indentTail = function(by) {
     var secret = getSecret(this);
 
     var lines = new Lines(secret.infos.map(function(info, i) {
-        if (i > 0 && info.line) {
+        if (i > 0 && info.line && ! info.locked) {
             info = copyLineInfo(info);
             info.indent += by;
         }
@@ -381,6 +385,20 @@ Lp.indentTail = function(by) {
     }
 
     return lines;
+};
+
+Lp.lockIndentTail = function () {
+    if (this.length < 2) {
+        return this;
+    }
+
+    var infos = getSecret(this).infos;
+
+    return new Lines(infos.map(function (info, i) {
+        info = copyLineInfo(info);
+        info.locked = i > 0;
+        return info;
+    }));
 };
 
 Lp.getIndentAt = function(line) {
@@ -428,6 +446,23 @@ Lp.guessTabWidth = function() {
     }
 
     return secret.cachedTabWidth = result;
+};
+
+// Determine if the list of lines has a first line that starts with a //
+// or /* comment. If this is the case, the code may need to be wrapped in
+// parens to avoid ASI issues.
+Lp.startsWithComment = function () {
+    var secret = getSecret(this);
+    if (secret.infos.length === 0) {
+        return false;
+    }
+    var firstLineInfo = secret.infos[0],
+        sliceStart = firstLineInfo.sliceStart,
+        sliceEnd = firstLineInfo.sliceEnd,
+        firstLine = firstLineInfo.line.slice(sliceStart, sliceEnd).trim();
+    return firstLine.length === 0 ||
+        firstLine.slice(0, 2) === "//" ||
+        firstLine.slice(0, 2) === "/*";
 };
 
 Lp.isOnlyWhitespace = function() {
@@ -688,6 +723,8 @@ function sliceInfo(info, startCol, endCol) {
     return {
         line: info.line,
         indent: indent,
+        // A destructive slice always unlocks indentation.
+        locked: false,
         sliceStart: sliceStart,
         sliceEnd: sliceEnd
     };
@@ -791,6 +828,10 @@ Lp.join = function(elements) {
             prevInfo.line = prevInfo.line.slice(
                 0, prevInfo.sliceEnd) + indent + info.line.slice(
                     info.sliceStart, info.sliceEnd);
+
+            // If any part of a line is indentation-locked, the whole line
+            // will be indentation-locked.
+            prevInfo.locked = prevInfo.locked || info.locked;
 
             prevInfo.sliceEnd = prevInfo.line.length;
 

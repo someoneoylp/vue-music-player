@@ -4,6 +4,7 @@ var types = require("./types");
 var getFieldValue = types.getFieldValue;
 var Printable = types.namedTypes.Printable;
 var Expression = types.namedTypes.Expression;
+var ReturnStatement = types.namedTypes.ReturnStatement;
 var SourceLocation = types.namedTypes.SourceLocation;
 var util = require("./util");
 var comparePos = util.comparePos;
@@ -188,28 +189,24 @@ exports.getReprinter = function(path) {
                 patcher.deleteComments(oldNode);
             }
 
-            var pos = util.copyPos(oldNode.loc.start);
-            var needsLeadingSpace = lines.prevPos(pos) &&
-                riskyAdjoiningCharExp.test(lines.charAt(pos));
-
             var newLines = print(
                 reprint.newPath,
                 needToPrintNewPathWithComments
             ).indentTail(oldNode.loc.indent);
 
-            var needsTrailingSpace =
-                riskyAdjoiningCharExp.test(lines.charAt(oldNode.loc.end));
+            var nls = needsLeadingSpace(lines, oldNode.loc, newLines);
+            var nts = needsTrailingSpace(lines, oldNode.loc, newLines);
 
             // If we try to replace the argument of a ReturnStatement like
             // return"asdf" with e.g. a literal null expression, we run
             // the risk of ending up with returnnull, so we need to add an
             // extra leading space in situations where that might
             // happen. Likewise for "asdf"in obj. See #170.
-            if (needsLeadingSpace || needsTrailingSpace) {
+            if (nls || nts) {
                 var newParts = [];
-                needsLeadingSpace && newParts.push(" ");
+                nls && newParts.push(" ");
                 newParts.push(newLines);
-                needsTrailingSpace && newParts.push(" ");
+                nts && newParts.push(" ");
                 newLines = linesModule.concat(newParts);
             }
 
@@ -221,6 +218,45 @@ exports.getReprinter = function(path) {
         return patcher.get(origLoc).indentTail(-orig.loc.indent);
     };
 };
+
+// If the last character before oldLoc and the first character of newLines
+// are both identifier characters, they must be separated by a space,
+// otherwise they will most likely get fused together into a single token.
+function needsLeadingSpace(oldLines, oldLoc, newLines) {
+    var posBeforeOldLoc = util.copyPos(oldLoc.start);
+
+    // The character just before the location occupied by oldNode.
+    var charBeforeOldLoc =
+        oldLines.prevPos(posBeforeOldLoc) &&
+        oldLines.charAt(posBeforeOldLoc);
+
+    // First character of the reprinted node.
+    var newFirstChar = newLines.charAt(newLines.firstPos());
+
+    return charBeforeOldLoc &&
+        riskyAdjoiningCharExp.test(charBeforeOldLoc) &&
+        newFirstChar &&
+        riskyAdjoiningCharExp.test(newFirstChar);
+}
+
+// If the last character of newLines and the first character after oldLoc
+// are both identifier characters, they must be separated by a space,
+// otherwise they will most likely get fused together into a single token.
+function needsTrailingSpace(oldLines, oldLoc, newLines) {
+    // The character just after the location occupied by oldNode.
+    var charAfterOldLoc = oldLines.charAt(oldLoc.end);
+
+    var newLastPos = newLines.lastPos();
+
+    // Last character of the reprinted node.
+    var newLastChar = newLines.prevPos(newLastPos) &&
+        newLines.charAt(newLastPos);
+
+    return newLastChar &&
+        riskyAdjoiningCharExp.test(newLastChar) &&
+        charAfterOldLoc &&
+        riskyAdjoiningCharExp.test(charAfterOldLoc);
+}
 
 function findReprints(newPath, reprints) {
     var newNode = newPath.getValue();
@@ -461,10 +497,21 @@ function findChildReprints(newPath, oldPath, reprints) {
         return false;
     }
 
-    for (var k in util.getUnionOfKeys(newNode, oldNode)) {
-        if (k === "loc")
-            continue;
+    var keys = util.getUnionOfKeys(oldNode, newNode);
 
+    if (oldNode.type === "File" ||
+        newNode.type === "File") {
+        // Don't bother traversing file.tokens, an often very large array
+        // returned by Babylon, and useless for our purposes.
+        delete keys.tokens;
+    }
+
+    // Don't bother traversing .loc objects looking for reprintable nodes.
+    delete keys.loc;
+
+    var originalReprintCount = reprints.length;
+
+    for (var k in keys) {
         newPath.stack.push(k, types.getFieldValue(newNode, k));
         oldPath.stack.push(k, types.getFieldValue(oldNode, k));
         var canReprint = findAnyReprints(newPath, oldPath, reprints);
@@ -474,6 +521,14 @@ function findChildReprints(newPath, oldPath, reprints) {
         if (!canReprint) {
             return false;
         }
+    }
+
+    // Return statements might end up running into ASI issues due to comments
+    // inserted deep within the tree, so reprint them if anything changed
+    // within them.
+    if (ReturnStatement.check(newPath.getNode()) &&
+        reprints.length > originalReprintCount) {
+        return false;
     }
 
     return true;

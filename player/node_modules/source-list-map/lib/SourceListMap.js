@@ -5,6 +5,7 @@
 var CodeNode = require("./CodeNode");
 var SourceNode = require("./SourceNode");
 var MappingsContext = require("./MappingsContext");
+var getNumberOfLines = require("./helpers").getNumberOfLines;
 
 function SourceListMap(generatedCode, source, originalSource) {
 	if(Array.isArray(generatedCode)) {
@@ -21,7 +22,7 @@ SourceListMap.prototype.add = function(generatedCode, source, originalSource) {
 	if(typeof generatedCode === "string") {
 		if(source) {
 			this.children.push(new SourceNode(generatedCode, source, originalSource));
-		} else if(this.children.length > 0 && this.children[this.children.length - 1].addGeneratedCode) {
+		} else if(this.children.length > 0 && this.children[this.children.length - 1] instanceof CodeNode) {
 			this.children[this.children.length - 1].addGeneratedCode(generatedCode);
 		} else {
 			this.children.push(new CodeNode(generatedCode));
@@ -37,7 +38,7 @@ SourceListMap.prototype.add = function(generatedCode, source, originalSource) {
 	}
 };
 
-SourceListMap.prototype.preprend = function(source) {
+SourceListMap.prototype.preprend = function(generatedCode, source, originalSource) {
 	if(typeof generatedCode === "string") {
 		if(source) {
 			this.children.unshift(new SourceNode(generatedCode, source, originalSource));
@@ -58,9 +59,28 @@ SourceListMap.prototype.preprend = function(source) {
 };
 
 SourceListMap.prototype.mapGeneratedCode = function(fn) {
+	var normalizedNodes = [];
 	this.children.forEach(function(sln) {
-		sln.mapGeneratedCode(fn);
+		sln.getNormalizedNodes().forEach(function(newNode) {
+			normalizedNodes.push(newNode);
+		});
 	});
+	var optimizedNodes = [];
+	normalizedNodes.forEach(function(sln) {
+		sln = sln.mapGeneratedCode(fn);
+		if(optimizedNodes.length === 0) {
+			optimizedNodes.push(sln);
+		} else {
+			var last = optimizedNodes[optimizedNodes.length - 1];
+			var mergedNode = last.merge(sln);
+			if(mergedNode) {
+				optimizedNodes[optimizedNodes.length - 1] = mergedNode;
+			} else {
+				optimizedNodes.push(sln);
+			}
+		}
+	});
+	return new SourceListMap(optimizedNodes);
 };
 
 SourceListMap.prototype.toString = function() {
@@ -72,7 +92,7 @@ SourceListMap.prototype.toString = function() {
 SourceListMap.prototype.toStringWithSourceMap = function(options) {
 	var mappingsContext = new MappingsContext();
 	var source = this.children.map(function(sln) {
-		return sln.generatedCode;
+		return sln.getGeneratedCode();
 	}).join("");
 	var mappings = this.children.map(function(sln) {
 		return sln.getMappings(mappingsContext);

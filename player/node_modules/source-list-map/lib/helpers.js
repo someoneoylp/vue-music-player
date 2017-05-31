@@ -11,3 +11,11 @@ exports.getNumberOfLines = function getNumberOfLines(str) {
 	} while(idx >= 0);
 	return nr;
 };
+
+exports.getUnfinishedLine = function getUnfinishedLine(str) {
+	var idx = str.lastIndexOf("\n");
+	if(idx === -1)
+		return str.length;
+	else
+		return str.length - idx - 1;
+};

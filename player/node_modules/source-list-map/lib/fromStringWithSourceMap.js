@@ -76,7 +76,7 @@ module.exports = function fromStringWithSourceMap(code, map) {
 		if(currentNode && currentNode instanceof CodeNode) {
 			currentNode.addGeneratedCode(generatedCode);
 		} else if(currentNode && currentNode instanceof SourceNode && !generatedCode.trim()) {
-			currentNode.generatedCode += generatedCode;
+			currentNode.addGeneratedCode(generatedCode);
 			currentSourceNodeLine++;
 		} else {
 			currentNode = new CodeNode(generatedCode);
@@ -88,7 +88,7 @@ module.exports = function fromStringWithSourceMap(code, map) {
 			currentNode.source === source &&
 			currentSourceNodeLine === linePosition
 		) {
-			currentNode.generatedCode += generatedCode;
+			currentNode.addGeneratedCode(generatedCode);
 			currentSourceNodeLine++;
 		} else {
 			currentNode = new SourceNode(generatedCode, source, originalSource, linePosition);

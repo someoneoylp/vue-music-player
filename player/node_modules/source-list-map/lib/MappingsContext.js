@@ -8,6 +8,7 @@ function MappingsContext() {
 	this.hasSourceContent = false;
 	this.currentOriginalLine = 1;
 	this.currentSource = 0;
+	this.unfinishedGeneratedLine = false;
 }
 module.exports = MappingsContext;
 
