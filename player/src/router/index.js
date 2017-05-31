@@ -14,6 +14,7 @@ export default new Router({
       path: '/music',
       name: 'music',
       component: music,
+
       children:[
         {
           path: '/music/recommend',
@@ -24,10 +25,14 @@ export default new Router({
           path: '/music/rankingList',
           name: 'rankingList',
           component: rankingList
+        },
+        {
+         path: '/music', 
+         redirect: '/music/recommend' 
         }
       ]
     },
-	 {
+   {
       path: '/list',
       name: 'list',
       component: list
@@ -37,6 +42,9 @@ export default new Router({
       name: 'friends',
       component: friends
     },
-    
+    {
+       path: '*', 
+       redirect: '/music/recommend' 
+     }
   ]
 })
