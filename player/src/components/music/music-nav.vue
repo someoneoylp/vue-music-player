@@ -1,10 +1,10 @@
 <template>
 		<div class="music-nav">
 			<div class="recommend" :class="{'isActive':isaActive}" @click="change(true)">
-				<router-link to="/music/recommend">音乐列表</router-link>
+				<router-link :to="{name:'recommend',query:{key:1.1}}">音乐列表</router-link>
 			</div>
 			<div class="ranking-list" :class="{'isActive':isbactive}" @click="change(false)">
-				<router-link to="/music/rankingList">排行榜</router-link>
+				<router-link :to="{name:'rankingList',query:{key:1.2}}">排行榜</router-link>
 			</div>
 		</div>
 	<!--  -->

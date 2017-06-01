@@ -7,13 +7,13 @@
 		</div>
 		<div class="header-nav">
 		 	<i class="music header-nav-icon">
-		        <router-link to="/music" active-class="musAct"></router-link>
+		        <router-link :to="{name:'music',query:{key:1}}" active-class="musAct"></router-link>
 		    </i>
 			<i class="list header-nav-icon">
-		        <router-link to="/list" active-class="listAct"></router-link>
+		        <router-link :to="{name:'list',query:{key:2}}" active-class="listAct"></router-link>
 		    </i>
 		    <i class="friends header-nav-icon">
-		        <router-link to="/friends" active-class="friAct"></router-link>
+		        <router-link :to="{name:'friends',query:{key:3}}" active-class="friAct"></router-link>
 		    </i>
 		</div>
 		<div class="search"></div>

@@ -89,10 +89,10 @@ export default {
 	font-size: 100%;
 }
 .music-content{
-	width: 95%;
 	margin: 0 auto;
 	.list-type{
 		float: left;
+		padding:0 5%;
 		.list-title{
 			width: 100%;
 	    height: 1.2rem;

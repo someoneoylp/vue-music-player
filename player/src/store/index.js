@@ -5,7 +5,9 @@ vue.use(Vuex)
 
 const state = {
 	hidNav: true,
-	hidFoot:true
+	hidFoot:true,
+	transitionName: '',
+	transitionName2: ''
 }
 
 const mutations = {
