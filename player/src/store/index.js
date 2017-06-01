@@ -3,8 +3,23 @@ import Vuex from 'vuex'
 
 vue.use(Vuex)
 
+const state = {
+	hidNav: true,
+	hidFoot:true
+}
+
+const mutations = {
+	change:(state,type) => {state.hidNav = type}
+}
+const actions = {
+	changeAsync ({commit},type){
+		setTimeout(() => {
+			commit('change',type)
+		},1000)
+	}
+}
 export default new Vuex.Store({
-  modules:{
-  	header:header
-  }
+  state : state,
+  mutations:mutations,
+  actions:actions
 })

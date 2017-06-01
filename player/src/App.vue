@@ -1,17 +1,26 @@
 <template>
-  <div>
-   <v-header></v-header>
-   <router-view></router-view> 
-   <v-footer></v-footer>
-   <!-- 
-   <v-content></v-content> -->
+  <div id="app">
+      <div v-show="hidNav">
+          <v-header></v-header>
+       </div>
+       <router-view></router-view> 
+       <div v-show="hidFoot">
+          <v-footer></v-footer>
+       </div>
   </div>
 </template>
 
 <script>
 import header from './components/public/header.vue'
 import footer from './components/public/footer.vue'
+import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 export default {
+  computed:{
+    ...mapState({
+      hidNav: state => state.hidNav,
+      hidFoot: state => state.hidFoot
+    })
+  },
   components: {
       'v-header': header,
       'v-footer' : footer
@@ -20,12 +29,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

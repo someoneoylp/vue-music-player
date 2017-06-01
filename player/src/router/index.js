@@ -6,6 +6,8 @@ import list from '@/components/list/list.vue'
 import friends from '@/components/friends/friends.vue'
 import recommend from "@/components/music/recommend.vue"
 import rankingList from "@/components/music/ranking-list.vue"
+import musicList from "@/components/music/music-list-components.vue"
+
 Vue.use(Router)
 
 export default new Router({
@@ -43,8 +45,14 @@ export default new Router({
       component: friends
     },
     {
+      path: "/musicList",
+      name: 'musicList',
+      component : musicList
+    },
+    {
        path: '*', 
        redirect: '/music/recommend' 
      }
+
   ]
 })
