@@ -1,9 +1,9 @@
 <template>
 		<div class="music-nav">
-			<div class="recommend" :class="{'isActive':isaActive}" @click="change(true)">
+			<div class="recommend" :class="{'isActive':musicIsActive}" @click="change(true)">
 				<router-link :to="{name:'recommend',query:{key:1.1}}">音乐列表</router-link>
 			</div>
-			<div class="ranking-list" :class="{'isActive':isbactive}" @click="change(false)">
+			<div class="ranking-list" :class="{'isActive':!musicIsActive}" @click="change(false)">
 				<router-link :to="{name:'rankingList',query:{key:1.2}}">排行榜</router-link>
 			</div>
 		</div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-
+import {mapState} from 'vuex'
 export default {
 	data(){
 		return {
@@ -19,10 +19,14 @@ export default {
 			isbactive:false
 		}
 	},
+	computed:{
+		...mapState({
+			musicIsActive:state=>state.musicIsActive
+		})
+	},
 	methods:{
 		change:function(a){
-			this.isbactive =!a
-			this.isaActive = a
+			this.$store.state.musicIsActive = !this.$store.state.musicIsActive
 		}
 	}
 }

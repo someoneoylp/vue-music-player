@@ -120,13 +120,10 @@ export default {
     	change:function(index){
     		this.n = -index
     	},
-    	test:function(){
-    		console.log("test")
-    	},
     	init:function(){
 			this.$store.state.hidNav = false
-		}
- 	}	
+			}
+ 		}	
  }
 
 </script>

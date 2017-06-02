@@ -5,13 +5,15 @@
 				<h1>{{list.name}}</h1>
 			</div>
 			<div class="list-content" v-for="item in list.content">
-				<img :src="item.img" alt="imgDesc" class="img">
-				<ul class="content">
-					<li v-for="i in item.music">{{i}}</li>
-				</ul>
+				<router-link :to="{name:'rankingEachPage',params:{id:item.id,bgColor:item.bgColor,date:item.date,name:item.name}}" @click.native="init()">	
+					<img :src="item.img" alt="imgDesc" class="img">
+					<ul class="content">
+						<li v-for="i in item.music">{{i}}</li>
+					</ul>
+				</router-link>			
 			</div>	
+				
 		</div>
-		
 	</div>
 	<!-- <router-view></router-view> -->
 </template>
@@ -22,19 +24,27 @@ const lists = [
 		name:"list1",
 		content:[
 			{
+				id:1,
+				name:"飙升榜",
+				date:"1月11日",
 				img:'../../static/img/test1.png',
+				bgColor:'#6593E0',
 				music:['第一类排行','22222222222222222222222222222','333333333333333333333333333']
 			},
 			{
+				id:2,
+				name:"新歌榜",
+				date:"2月19日",
+				bgColor:'#48B4B7',
 				img:'../../static/img/test2.png',
 				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
 			},
 			{
+				id:3,
+				name:"原创榜",
+				date:"8月12日",
+				bgColor:'#C5496D',
 				img:'../../static/img/test3.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test1.png',
 				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
 			}
 		]
@@ -43,18 +53,22 @@ const lists = [
 		name:"list2",
 		content:[
 			{
+				id:1,
 				img:'../../static/img/test1.png',
 				music:['第2类排行','22222222222222222222222222222','333333333333333333333333333']
 			},
 			{
+				id:2,
 				img:'../../static/img/test2.png',
 				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
 			},
 			{
+				id:3,
 				img:'../../static/img/test3.png',
 				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
 			},
 			{
+				id:4,
 				img:'../../static/img/test1.png',
 				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
 			}
@@ -70,14 +84,16 @@ export default {
 		}
 	},
 	computed:{
-		// ...mapState({
-		// 	lists:state=>state.list,
-		// 	img:state=>state.list1.img,
-		// 	content:state=>state.list1.content,
-		// })
+		...mapState({
+			hidNav:state=>state.hidNav
+		})
+	},
+	methods:{
+		init:function(){
+			this.$store.state.hidNav = false
+		}
 	}
 }
-//console.log(this.$state.img)
 
 </script>
 

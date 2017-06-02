@@ -7,7 +7,7 @@ import friends from '@/components/friends/friends.vue'
 import recommend from "@/components/music/recommend.vue"
 import rankingList from "@/components/music/ranking-list.vue"
 import musicList from "@/components/music/music-list-components.vue"
-
+import rankingEachPage from "@/components/music/ranking-each-page.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -48,6 +48,11 @@ export default new Router({
       path: "/musicList",
       name: 'musicList',
       component : musicList
+    },
+    {
+      path: '/music/rankingEachPage/:id',
+      name: 'rankingEachPage',
+      component: rankingEachPage
     },
     {
        path: '*', 

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="music-list-info">
-			<div class="list-info-header">
+			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundColor:this.$route.params.bgColor}">
 				<router-link @click.native="init()" to="/" class="back">
 					
 				</router-link>
@@ -65,14 +65,26 @@ export default {
 	},
 	computed:{
 		...mapState({
-			hidNav: state => state.hidNav
+			hidNav: state => state.hidNav,
+			scrollToBelow:state=>state.scrollToBelow
 		})
 	},
-	 methods:{
-    	init:function(){
+	methods:{
+  	init:function(){
 			this.$store.state.hidNav = true
+		},
+		getScroll:function(){
+			this.scroll = document.body.scrollTop
+			if(this.scroll>=30){
+				this.$store.state.scrollToBelow = true
+			}else{
+				this.$store.state.scrollToBelow = false
+			}	
 		}
- 	}	
+ 	},
+ 	mounted(){
+		window.addEventListener('scroll',this.getScroll)
+	}
 }
 </script>
 
@@ -191,5 +203,12 @@ export default {
 			}
 		}
 	}
+}
+.scrollFixed{
+	position: fixed;
+	top:0;
+	left: 0;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
 }
 </style>
