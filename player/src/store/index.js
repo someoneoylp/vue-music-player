@@ -9,7 +9,8 @@ const state = {
 	transitionName: '',
 	transitionName2: '',
 	musicIsActive:true,
-	scrollToBelow:false
+	scrollToBelow:false,
+	hidSidebar:false
 }
 
 const mutations = {

@@ -1,6 +1,6 @@
 <template>
 	<div class="header">
-		<div class="func">
+		<div class="func" @click="showSideBar()">
 			<div class="burger"></div>
 			<div class="burger"></div>
 			<div class="burger"></div>
@@ -21,8 +21,15 @@
 </template>
 
 <script>
+import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import {change} from "../../store/index.js"
 export default {
-
+	methods:{
+    	showSideBar:function(){
+			this.$store.state.hidSidebar = true
+			console.log(this.$store.state.hidSidebar)
+		}
+ 	}
 }
 </script>
 

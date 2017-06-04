@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 import music from '@/components/music/music.vue'
 import list from '@/components/list/list.vue'
 import friends from '@/components/friends/friends.vue'
@@ -8,6 +7,7 @@ import recommend from "@/components/music/recommend.vue"
 import rankingList from "@/components/music/ranking-list.vue"
 import musicList from "@/components/music/music-list-components.vue"
 import rankingEachPage from "@/components/music/ranking-each-page.vue"
+import playMusic from "@/components/public/play-music.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -53,6 +53,11 @@ export default new Router({
       path: '/music/rankingEachPage/:id',
       name: 'rankingEachPage',
       component: rankingEachPage
+    },
+    {
+      path: '/playMusic',
+      name: 'playMusic',
+      component: playMusic
     },
     {
        path: '*', 
