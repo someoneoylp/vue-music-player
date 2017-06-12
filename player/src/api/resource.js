@@ -7,3 +7,4 @@ export const PersonalizedResource = '/api/personalized/playlist';//推荐歌单
 export const PrivatecontentResource = '/api/personalized/privatecontent'; //获取独家放送
 export const PersonalizedMvResource= '/api/personalized/mv';//获取推荐mv
 export const BroadcastingStation ='/api/personalized/djprogram'//主播电台
+export const PlayListDeatil = '/api/playlist/detail'//获取歌单内容

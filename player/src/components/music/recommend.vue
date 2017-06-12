@@ -19,12 +19,12 @@
 				<p class="recommend-title"><i class="recommend-icon"></i>推荐歌单</p>
 				<div class="music-list-item" v-for="musicList in musicLists"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
+						<router-link @click.native="init()" :to="{name:'musicList',params: {id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
 							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
 						</router-link> 
 					</div>
-					<p class="music-des">{{musicList.name}} </p>
+					<p class="music-des">{{musicList.name}}</p>
 				</div>
 			</div>
 			<div class="recommend-playlist">
@@ -49,7 +49,7 @@
 				<p class="recommend-title"><i class="news-icon"></i>最新音乐</p>
 				<div class="music-list-item" v-for="musicList in musicLists"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
+						<router-link @click.native="init()" :to="{name:'musicList',params:{id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
 							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
 						</router-link> 
@@ -113,13 +113,14 @@ export default {
 	},
 	computed:{
 		...mapState({
-			hidNav: state => state.hidNav
+			hidNav: state => state.hidNav,
+			recoListId:state=>state.recoListId
 		})
 	},
 	beforeMount:function(){
 		
 	},
-	 mounted:function(){
+	mounted:function(){
 	 	//定时器，每隔2000向左移动winWidth+px
 	      var _this=this;
 	    setInterval(function(){
@@ -128,20 +129,14 @@ export default {
 	       	 _this.n=0;
 	       }
 	     },2000)
-	    this.getData(),
-	    this.musicDes()
+	    this.getData()
     },
     methods:{
     	change:function(index){
     		this.n = -index
     	},
-    	init:function(){
-			this.$store.state.hidNav = false
-		},
-		musicDes:function(){
-			var musicDesID = document.getElementsByClassName('musicDes');
-
-			console.log("文字字数"+musicDesID.length)
+    	init:function(id){
+			this.$store.state.hidNav = false;
 		},
 		getData:function(){
 			api.getPersonalized()

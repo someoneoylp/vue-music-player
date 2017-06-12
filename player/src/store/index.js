@@ -11,11 +11,13 @@ const state = {
 	transitionName2: '',
 	musicIsActive:true,
 	scrollToBelow:false,
-	hidSidebar:false
+	hidSidebar:false,
+	recoListId:''
 }
 
 const mutations = {
-	change:(state,type) => {state.hidNav = type}
+	change:(state,type) => {state.hidNav = type},
+	getRecoListId:(state,id) =>{state.recoListId = id,console.log(id)}
 }
 const actions = {
 	changeAsync ({commit},type){

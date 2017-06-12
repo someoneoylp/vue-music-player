@@ -8,7 +8,8 @@ import {
 	PersonalizedResource,//推荐歌单
 	PersonalizedMvResource,
 	PrivatecontentResource,
-	BroadcastingStation
+	BroadcastingStation,
+	PlayListDeatil
 } from './resource.js';
 
 export default {
@@ -63,5 +64,13 @@ export default {
 	  },
 	  getBroadcastingStation(){
 	  	return axios.get(BroadcastingStation);
+	  },
+	  //获取歌单内容
+	  getPlayListDeatil(id){
+	  	return axios.get(PlayListDeatil, {
+	      params: {
+	        id: id
+	      }
+	    })
 	  }
 }
