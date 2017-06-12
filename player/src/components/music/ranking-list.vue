@@ -7,8 +7,8 @@
 			<div class="list-content" v-for="(list,index) in lists" v-if="index<4">
 				<router-link :to="{name:'rankingEachPage',params:{id:list.id}}" @click.native="init()">	
 					<img :src="list.coverImgUrl" alt="imgDesc" class="img">
-					<ul class="content" v-for="item in list.tracks">
-						<li>{{item.first}}</li>
+					<ul class="content" v-for="(item,i) in list.tracks">
+						<li>{{i+1}}.{{item.first}} - {{item.second}}</li>
 					</ul>
 				</router-link>			
 			</div>	
@@ -88,7 +88,7 @@ export default {
 		.list-content{
 			float: left;
 			width: 100%;
-			margin-top: 20px;
+			margin-top: 10px;
 			.img{
 				width: 6.5rem;
 				height: 6.5rem;
@@ -97,7 +97,7 @@ export default {
 			.content{
 				float: right;
 				width: 60%;
-				margin: 0.8rem 1rem auto auto;
+				margin: 0.4rem 1rem 0.4rem auto;
 				font-size: 0.8rem;
 				li{
 					overflow: hidden;
@@ -109,19 +109,26 @@ export default {
 		}	
 		.list-content2{
 			width: 50%;
-			.img{
-				width: 100%;
-				height: 10rem;
+			height: 200px;
+			a{
+				display: block;
+				height: 100%;
 				padding:10px;
-			}
-			p{
-				font-size: 0.8rem;
-				text-align: center;
-			}
+				.img{
+					width: 100%;
+					height: auto;
+					float: left;
+				}
+				p{
+					width: 100%;
+					font-size: 0.8rem;
+					line-height: 2rem;
+					float: left;
+					text-align: center;
+				}	
+			}			
 		}
-	}
-	
-	
+	}	
 }
 
 </style>

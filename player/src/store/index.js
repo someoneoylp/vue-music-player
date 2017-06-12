@@ -21,6 +21,7 @@ const state = {
 	shareCount:0, //分享数目
 	musicLists:[], //歌单
 	trackCount:0, //歌单内歌曲数目
+	rankingListName:'',//榜单子页面的名字
 	name:'', //歌单名称
 	nickname:'',//歌单创建者名称
 	coverImgUrl:'',//背景图片

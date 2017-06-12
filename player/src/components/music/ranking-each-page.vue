@@ -1,8 +1,7 @@
 <template>
 	<div>
-		<div class="rankingEachPage" :style="{backgroundColor:this.$route.params.bgColor}">
-			<img :src="coverImgUrl" alt="">
-			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundColor:this.$route.params.bgColor}">
+		<div class="rankingEachPage" :style="{backgroundImage:'url('+coverImgUrl+')'}">
+			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundImage:'url('+coverImgUrl+')'}">
 				<router-link @click.native="init()" to="/music/rankingList" class="back">
 				</router-link>
 				<span class="music-title">
@@ -18,7 +17,7 @@
 			<div class="desc">
 				<ul>
 					<li>云音乐</li>
-					<li></li>
+					<li>{{name}}</li>
 					<li>最近更新<span>{{date}}</span></li>
 				</ul>
 			</div>
@@ -51,10 +50,21 @@ export default{
 			scrollToBelow:state=>state.scrollToBelow,
 			subscribedCount:state=>state.subscribedCount,
 			commentCount:state=>state.commentCount,
-			shareCount:state=>state.shareCount
+			shareCount:state=>state.shareCount,
+			name: state=>state.rankingListName
 		}),
 		hidNav(){
 			return this.$route.params.hidNav;
+		},
+		name(){
+			var name = this.$store.state.rankingListName;
+			if(name.slice(0,3)=="云音乐"){
+				return name.slice(3);
+			}else if(name.slice(0,2)=="网易"){
+				return name.slice(2);
+			}else{
+				return name;
+			}
 		}
 	},
 	mounted:function(){
@@ -75,13 +85,13 @@ export default{
 		},
 		getTopListResource: function(){
 			api.getTopListResource(this.id).then((response)=>{
-				console.log(response.data);
-				this.$store.state.subscribedCount = response.data.result.subscribedCount;
+				this.$store.state.subscribedCount= response.data.result.subscribedCount;
 				this.$store.state.commentCount = response.data.result.commentCount;
 				this.$store.state.shareCount = response.data.result.shareCount;
 				this.$store.state.musicLists = response.data.result.tracks;
 				this.$store.state.trackCount = response.data.result.trackCount;
-
+				this.$store.state.rankingListName = response.data.result.name;
+				
 				this.coverImgUrl = response.data.result.coverImgUrl;
 				var date = new Date();
 				this.date = date.getMonth() +'月'+date.getDay()+'日';
@@ -145,8 +155,11 @@ export default{
 		background-color: rgba(0, 0, 0, 0.2);
 	}
 	.desc{
-		margin-left: 30px;
+		margin: 30px 0 30px 30px;
 		color: #fff;
+		.coverimg{
+			height: 100px;
+		}
 		li{
 			padding: 5px 0;
 		}

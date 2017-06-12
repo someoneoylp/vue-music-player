@@ -28,7 +28,17 @@ export default {
 			subscribedCount:state=>state.subscribedCount,
 			commentCount:state=>state.commentCount,
 			shareCount:state=>state.shareCount
-		})	
+		}),
+		subscribedCount:function(){
+			var subCount = this.$store.state.subscribedCount;
+			//10万以上才以万为单位
+			if(subCount>100000){
+				subCount = subCount.toString();
+				return subCount.slice(0,-4)+'.'+ subCount.slice(-5,-4)+'万';
+			}else{
+				return subCount;
+			}
+		}
 	}
 	
 }

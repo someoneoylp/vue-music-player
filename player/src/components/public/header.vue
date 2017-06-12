@@ -16,7 +16,9 @@
 		        <router-link :to="{name:'friends',query:{key:3}}" active-class="friAct"></router-link>
 		    </i>
 		</div>
-		<div class="search"></div> 
+		<div class="search" @click="init()">
+			<router-link :to="{name:'search'}"></router-link>
+		</div> 
 		
 	</div>
 </template>
@@ -31,11 +33,8 @@ export default {
 			host : this.HOST
 		}
 	},
-	 mounted () {
-	
-	},
 	methods:{
-    	showSideBar:function(){
+    showSideBar:function(){
 			this.$store.state.hidSidebar = true
 			console.log(this.$store.state.hidSidebar)
 		},
@@ -44,6 +43,10 @@ export default {
 			.then((response)=>{
 				console.log(response.data);
 			})
+		},
+		init:function(){
+			console.log(this.$store.state.hidNav);
+			this.$store.state.hidNav = false
 		}
 	}
 }
@@ -113,9 +116,15 @@ export default {
 	}
 	.search{
 		flex: 1;
+		width: 100%;
 		height: 100%;
 		background: url("../../assets/search.png") center center no-repeat;
 		background-size: 40% 40%;
+		a{
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
 	}
 }
 
