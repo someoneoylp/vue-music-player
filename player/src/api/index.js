@@ -9,7 +9,9 @@ import {
 	PersonalizedMvResource,
 	PrivatecontentResource,
 	BroadcastingStation,
-	PlayListDeatil
+	PlayListDeatil,
+	TopListBriefResource,
+  TopListResource
 } from './resource.js';
 
 export default {
@@ -72,5 +74,21 @@ export default {
 	        id: id
 	      }
 	    })
+	  },
+	  //  音乐排行榜首页简介
+	  getTopListBriefResource (idx) {
+	    return axios.get(TopListBriefResource, {
+	      params: {
+	        idx: idx
+	      }
+	    });
+	  },
+	  //  音乐排行榜各个子页面
+	  getTopListResource (id) {
+	    return axios.get(TopListResource, {
+	      params: {
+	        id: id
+	      }
+	    });
 	  }
 }

@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<div class="rankingEachPage" :style="{backgroundColor:this.$route.params.bgColor}">
+			<img :src="coverImgUrl" alt="">
 			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundColor:this.$route.params.bgColor}">
 				<router-link @click.native="init()" to="/music/rankingList" class="back">
 				</router-link>
@@ -17,8 +18,8 @@
 			<div class="desc">
 				<ul>
 					<li>云音乐</li>
-					<li>{{this.$route.params.name}}</li>
-					<li>最近更新<span>{{this.$route.params.date}}</span></li>
+					<li></li>
+					<li>最近更新<span>{{date}}</span></li>
 				</ul>
 			</div>
 			<contentOp></contentOp>
@@ -27,10 +28,19 @@
 	</div>	
 </template>
 <script>
+import api from '../../api'
+import axios from 'axios'
 import contentOp from "../public/content-operation.vue"
 import musicList from "../public/music-list.vue"
 import {mapState} from "vuex"
 export default{
+	data(){
+		return{
+			id:this.$route.params.id,
+			coverImgUrl:'',
+			date:''
+		}
+	},
 	components:{
 		contentOp,
 		musicList
@@ -38,15 +48,22 @@ export default{
 	computed:{
 		...mapState({
 			hidNav:state=>state.hidNav,
-			scrollToBelow:state=>state.scrollToBelow
+			scrollToBelow:state=>state.scrollToBelow,
+			subscribedCount:state=>state.subscribedCount,
+			commentCount:state=>state.commentCount,
+			shareCount:state=>state.shareCount
 		}),
 		hidNav(){
 			return this.$route.params.hidNav;
 		}
 	},
+	mounted:function(){
+		window.addEventListener('scroll',this.getScroll);
+		this.getTopListResource();
+	},
 	methods:{
 		init:function(){
-			this.$store.state.hidNav = true
+			this.$store.state.hidNav = true;
 		},
 		getScroll:function(){
 			this.scroll = document.body.scrollTop
@@ -55,10 +72,23 @@ export default{
 			}else{
 				this.$store.state.scrollToBelow = false
 			}	
+		},
+		getTopListResource: function(){
+			api.getTopListResource(this.id).then((response)=>{
+				console.log(response.data);
+				this.$store.state.subscribedCount = response.data.result.subscribedCount;
+				this.$store.state.commentCount = response.data.result.commentCount;
+				this.$store.state.shareCount = response.data.result.shareCount;
+				this.$store.state.musicLists = response.data.result.tracks;
+				this.$store.state.trackCount = response.data.result.trackCount;
+
+				this.coverImgUrl = response.data.result.coverImgUrl;
+				var date = new Date();
+				this.date = date.getMonth() +'月'+date.getDay()+'日';
+			}).catch((error) => {
+        console.log('加载歌单信息出错:' + error);
+      });
 		}
-	},
-	mounted(){
-		window.addEventListener('scroll',this.getScroll)
 	}
 }
 </script>

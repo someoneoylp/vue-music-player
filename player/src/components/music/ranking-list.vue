@@ -1,83 +1,67 @@
 <template>
 	<div class="music-content">
-		<div class="list-type" v-for="list in lists">
+		<div class="list-type">
 			<div class="list-title">
-				<h1>{{list.name}}</h1>
+				<h1>云音乐官方榜</h1>
 			</div>
-			<div class="list-content" v-for="item in list.content">
-				<img :src="item.img" alt="imgDesc" class="img">
-				<ul class="content">
-					<li v-for="i in item.music">{{i}}</li>
-				</ul>
+			<div class="list-content" v-for="(list,index) in lists" v-if="index<4">
+				<router-link :to="{name:'rankingEachPage',params:{id:list.id}}" @click.native="init()">	
+					<img :src="list.coverImgUrl" alt="imgDesc" class="img">
+					<ul class="content" v-for="item in list.tracks">
+						<li>{{item.first}}</li>
+					</ul>
+				</router-link>			
 			</div>	
 		</div>
-		
+		<div class="list-type">
+			<div class="list-title">
+				<h1>全球榜</h1>
+			</div>
+			<div class="list-content list-content2" v-for="(list,index) in lists" v-if="index>=4">
+				<router-link :to="{name:'rankingEachPage',params:{id:list.id}}" @click.native="init()">	
+					<img :src="list.coverImgUrl" alt="imgDesc" class="img">
+					<p>{{list.name}}</p>
+				</router-link>			
+			</div>	
+		</div>
 	</div>
 	<!-- <router-view></router-view> -->
 </template>
 
 <script>
-const lists = [
-	{
-		name:"list1",
-		content:[
-			{
-				img:'../../static/img/test1.png',
-				music:['第一类排行','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test2.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test3.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test1.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			}
-		]
-	},
-	{
-		name:"list2",
-		content:[
-			{
-				img:'../../static/img/test1.png',
-				music:['第2类排行','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test2.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test3.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			},
-			{
-				img:'../../static/img/test1.png',
-				music:['111111111111111111111','22222222222222222222222222222','333333333333333333333333333']
-			}
-		]
-	}
-]
+import api from '../../api'
 import {mapState} from 'vuex'
 export default {
 	name:'rank-list',
 	data(){
 		return{
-			lists:lists
+			lists:[],
+			index:0,
+			tracks:[],
 		}
 	},
 	computed:{
-		// ...mapState({
-		// 	lists:state=>state.list,
-		// 	img:state=>state.list1.img,
-		// 	content:state=>state.list1.content,
-		// })
+		...mapState({
+			hidNav:state=>state.hidNav
+		})
+	},
+	mounted:function(){
+		this.getTopListBriefResource();
+	},
+	methods:{
+		init:function(){
+			this.$store.state.hidNav = false
+		},
+		getTopListBriefResource: function(){
+			api.getTopListBriefResource().then((response) => {
+				this.lists = response.data.list;
+				this.tracks = response.data.list.tracks;
+      }).catch((error) => {
+        console.log('加载歌单信息出错:' + error);
+      });
+		}
 	}
 }
-//console.log(this.$state.img)
 
 </script>
 
@@ -106,8 +90,8 @@ export default {
 			width: 100%;
 			margin-top: 20px;
 			.img{
-				width: 6.0rem;
-				height: 6.0rem;
+				width: 6.5rem;
+				height: 6.5rem;
 				float: left;
 			}
 			.content{
@@ -121,9 +105,20 @@ export default {
 					height: 1.5rem;
 					line-height: 1.5rem;
 				}
-				
 			}	
 		}	
+		.list-content2{
+			width: 50%;
+			.img{
+				width: 100%;
+				height: 10rem;
+				padding:10px;
+			}
+			p{
+				font-size: 0.8rem;
+				text-align: center;
+			}
+		}
 	}
 	
 	

@@ -12,7 +12,12 @@ const state = {
 	musicIsActive:true,
 	scrollToBelow:false,
 	hidSidebar:false,
-	recoListId:''
+	recoListId:'',
+	subscribedCount:0,
+	commentCount:0,
+	shareCount:0,
+	musicLists:[],
+	trackCount:0
 }
 
 const mutations = {

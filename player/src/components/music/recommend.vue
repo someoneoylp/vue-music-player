@@ -36,13 +36,13 @@
 					</div>
 					<p class="music-des">{{soleList.name}} </p>
 				</div>
-				<div class="music-list-item sole-bottom"> 
+				<div class="music-list-item sole-bottom" v-for="(soleList,index) in soleLists" v-if="index==0"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleLists[0].picUrl + ')'}">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
 							
 						</router-link> 
 					</div>
-					<p class="music-des">{{soleLists[0].name}} </p>
+					<p class="music-des">{{soleList.name}} </p>
 				</div>
 			</div>
 			<div class="recommend-playlist">

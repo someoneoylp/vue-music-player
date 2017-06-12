@@ -4,7 +4,7 @@
 			<li class="play-all">
 				<router-link to="">
 					<p class="play-icon"></p>
-					<p>播放全部<span>(共{{musicLists.length}}首)</span></p>
+					<p>播放全部<span>(共{{trackCount}}首)</span></p>
 				</router-link>
 			</li>
 			<li v-for="(musicList,index) in musicLists" class="list-item">
@@ -14,13 +14,14 @@
 				<router-link :to="{name:'playMusic',query:{key:index}}" class="music-title">
 					<p class="">
 						<span class="music-name">
-							{{musicList.name}}
-							<i v-if="musicList.mv" class="mv-icon">MV</i>
+							{{musicList.name}} <span v-if="musicList.alias.length">- {{musicList.alias[0]}}</span>
+							<!-- <i v-if="musicList.mv" class="mv-icon">MV</i> -->
 						</span>
-						<span class="music-singer">
+						<span class="music-singer" v-for="artist in musicList.artists">
 							<i class="isDown" v-if="musicList.down"></i>
-							{{musicList.artists.name}} - {{musicList.album.name}}
+							{{artist.name}} 
 						</span>
+						<span class="music-album"> - {{musicList.album.name}}</span>
 					</p>
 				</router-link>
 				<p class="music-more" @click="">
@@ -34,38 +35,22 @@
 </template>
 
 <script>
-	import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
-	import {change} from "../../store/index.js"
-	import api from '../../api/index'
-	const musicLists = [
-		
-	]
-
+import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import {change} from "../../store/index.js"
 export default {
-	data () {
-		return {
-			musicLists : musicLists,
-			id:this.$route.params.id
-		}
-	},
 	computed:{
 		...mapState({
-			hidNav: state => state.hidNav,
-			recoListId: state => state.recoListId,
+			musicLists: state => state.musicLists,
+			trackCount: state => state.trackCount
 		})
-		
 	},
-	mounted:function () {
-		this.getPlayList()
+	mounted:function(){
+		this.init();
 	},
 	methods:{
-		getPlayList(){
-			console.log(this.id)
-			api.getPlayListDeatil(this.id)
-			.then((response)=>{
-				this.musicLists = response.data.result.tracks
-				console.log(response.data.result.tracks)
-			})
+		init:function(){
+			console.log(this.musicLists);
+			console.log(this.trackCount);
 		}
 	}
 }
@@ -91,7 +76,8 @@ export default {
 			font-size:12px;
 			color:#B1B1B2;
 		}
-	}
+	}	
+	
 	.play-icon{
 		display: inline-block;
 		vertical-align:middle;
@@ -118,7 +104,9 @@ export default {
 	}
 	.music-title{
 		flex:6;
-		display:inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 		border-bottom: 1px solid #E6E8E9;
 		.music-name{
 			font-size:13px;
@@ -150,6 +138,13 @@ export default {
 				background-size:100% 100%;
 				vertical-align:middle;
 			}
+		}
+		.music-album{
+			font-size:12px;
+			color:#B1B1B2;
+			width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
 	.music-more{

@@ -3,15 +3,15 @@
 	<div class="content-op">
 		<span class="operation-item">
 			<p class="collection-icon operation-icon"></p>
-			<p>{{opNum[0].collectionNum}}</p>
+			<p>{{subscribedCount}}</p>
 		</span>
 		<span class="operation-item">
 			<p class="comment-icon operation-icon"></p>
-			<p>{{opNum[0].commentNum}}</p>
+			<p>{{commentCount}}</p>
 		</span>
 		<span class="operation-item">
 			<p class="share-icon operation-icon"></p>
-			<p>{{opNum[0].shareNum}}</p>
+			<p>{{shareCount}}</p>
 		</span>
 		<span class="operation-item">
 			<p class="download-icon operation-icon"></p>
@@ -21,17 +21,16 @@
 </template>
 
 <script>
-const opNum = [
-	{collectionNum:1033,
-	commentNum:90,
-	shareNum:13}
-]
+import {mapState} from 'vuex'
 export default {
-	data(){
-		return {
-			opNum:opNum
-		}
+	computed:{
+		...mapState({
+			subscribedCount:state=>state.subscribedCount,
+			commentCount:state=>state.commentCount,
+			shareCount:state=>state.shareCount
+		})	
 	}
+	
 }
 </script>
 <style lang="less">
