@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <v-sidebar v-show="hidSideBar"></v-sidebar>
     <div v-show="hidNav">
         <v-header></v-header>
      </div>
@@ -15,6 +16,7 @@
 <script>
 import header from './components/public/header.vue'
 import footer from './components/public/footer.vue'
+import sidebar from './components/public/sidebar.vue'
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 export default {
   computed:{
@@ -23,11 +25,13 @@ export default {
       hidFoot: state => state.hidFoot,
       transitionName: state=>state.transitionName,
       transitionName2: state=>state.transitionName2,
+      hidSideBar: state => state.hidSidebar
     })
   },
   components: {
     'v-header': header,
-    'v-footer' : footer
+    'v-footer' : footer,
+    'v-sidebar':sidebar
   },
   watch:{
     '$route'(to,from){

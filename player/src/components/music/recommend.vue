@@ -15,77 +15,86 @@
 		</div>
 		<!-- 推荐音乐列表部分 -->
 		<div class="music-list-content">
-			<div class="music-list-item" v-for="musicList in musicLists"> 
-				<div class="imgWrap">
-					<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.backgroundUrl + ')'}">
-						<p class="music-num"><i class="music-num-icon"></i>{{musicList.playQuantity}}</p>
-						<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
-					</router-link> 
+			<div class="recommend-playlist">
+				<p class="recommend-title"><i class="recommend-icon"></i>推荐歌单</p>
+				<div class="music-list-item" v-for="musicList in musicLists"> 
+					<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
+							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
+							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
+						</router-link> 
+					</div>
+					<p class="music-des">{{musicList.name}} </p>
 				</div>
-					
-				<p class="music-des">{{musicList.describe}}</p>
+			</div>
+			<div class="recommend-playlist">
+				<p class="recommend-title"><i class="sole-icon"></i>独家放送</p>
+				<div class="music-list-item-sole" v-for="(soleList,index) in soleLists" v-if="index>0"> 	<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
+							
+						</router-link> 
+					</div>
+					<p class="music-des">{{soleList.name}} </p>
+				</div>
+				<div class="music-list-item sole-bottom"> 
+					<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleLists[0].picUrl + ')'}">
+							
+						</router-link> 
+					</div>
+					<p class="music-des">{{soleLists[0].name}} </p>
+				</div>
+			</div>
+			<div class="recommend-playlist">
+				<p class="recommend-title"><i class="news-icon"></i>最新音乐</p>
+				<div class="music-list-item" v-for="musicList in musicLists"> 
+					<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
+							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
+							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
+						</router-link> 
+					</div>
+					<p class="music-des">{{musicList.name}} </p>
+				</div>
+			</div>
+			<div class="recommend-playlist">
+				<p class="recommend-title"><i class="mv-icon"></i>推荐MV</p>
+				<div class="music-list-item recoMv" v-for="recoMvList in recoMvLists"> 
+					<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + recoMvList.picUrl + ')'}">
+							<p class="music-num"><i class="music-num-icon"></i> {{recoMvList.playCount}}</p>
+						</router-link> 
+					</div>
+					<p class="music-des">{{recoMvList.name}} </p>
+				</div>
+			</div>
+			<div class="recommend-playlist">
+				<p class="recommend-title"><i class="station-icon"></i>主播电台</p>
+				<div class="music-list-item" v-for="stationList in stationLists"> 
+					<div class="imgWrap">
+						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + stationList.picUrl + ')'}">
+							<p class="music-num"><i class="music-num-icon"></i> {{stationList.playCount}}</p>
+							<p class="music-user"><i class="music-user-icon"></i>{{stationList.author}}</p>
+						</router-link> 
+					</div>
+					<p class="music-des">{{stationList.name}} </p>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
-	import {change} from "../../store/index.js"
-var musicLists = [
-	{
-		author:"Ayasel",
-		playQuantity:"2100万",
-		describe:"校园合唱|老师评委请挥动你们的双手",
-		backgroundUrl:'../../../static/img/list-1.jpg'
-	},{
-		author:"一般不淡定",
-		playQuantity:"800万",
-		describe:"【毕业季】我们不说再见",
-		backgroundUrl:'../../../static/img/list-2.jpg'
-	},{
-		author:"华纳音乐",
-		playQuantity:"820万",
-		describe:"拒绝一切认输，从来都不服",
-		backgroundUrl:'../../../static/img/list-3.jpg'
-	},{
-		author:"第十三个神",
-		playQuantity:"520万",
-		describe:"100位欧美90后歌手：这些人把青春给了音乐",
-		backgroundUrl:'../../../static/img/list-4.jpg'
-	},{
-		author:"浩子Joe",
-		playQuantity:"840万",
-		describe:"爸爸的录音机|怀旧华语",
-		backgroundUrl:'../../../static/img/list-5.jpg'
-	},{
-		author:"Ayasel",
-		playQuantity:"2100万",
-		describe:"校园合唱|老师评委请挥动你们的双手",
-		backgroundUrl:'../../../static/img/list-6.jpg'
-	},{
-		author:"一般不淡定",
-		playQuantity:"800万",
-		describe:"【毕业季】我们不说再见",
-		backgroundUrl:'../../../static/img/list-1.jpg'
-	},{
-		author:"华纳音乐",
-		playQuantity:"820万",
-		describe:"拒绝一切认输，从来都不服输",
-		backgroundUrl:'../../../static/img/list-4.jpg'
-	},{
-		author:"第十三个神",
-		playQuantity:"520万",
-		describe:"100位欧美90后歌手：这些人把青春给了音乐",
-		backgroundUrl:'../../../static/img/list-2.jpg'
-	},{
-		author:"浩子Joe",
-		playQuantity:"840万",
-		describe:"爸爸的录音机|怀旧华语",
-		backgroundUrl:'../../../static/img/list-3.jpg'
-	}]
-	/*屏幕宽度*/
-	var winWidth = screen.width
+import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import {change} from "../../store/index.js"
+import api from '../../api/index'
+var musicLists = [];
+var soleLists =[];
+var newestLists = [];
+var recoMvLists =[];
+var stationLists = [];
+/*屏幕宽度*/
+var winWidth = screen.width
 export default {
 	data(){
 		return {
@@ -95,7 +104,11 @@ export default {
              winWidth : winWidth,
              n:0,
              currentIndex: 0,
-             i:0
+             i:0,
+             soleLists : soleLists,
+             newestLists:newestLists,
+             recoMvLists:recoMvLists,
+             stationLists:stationLists
 		}
 	},
 	computed:{
@@ -115,6 +128,8 @@ export default {
 	       	 _this.n=0;
 	       }
 	     },2000)
+	    this.getData(),
+	    this.musicDes()
     },
     methods:{
     	change:function(index){
@@ -122,8 +137,36 @@ export default {
     	},
     	init:function(){
 			this.$store.state.hidNav = false
-			}
- 		}	
+		},
+		musicDes:function(){
+			var musicDesID = document.getElementsByClassName('musicDes');
+
+			console.log("文字字数"+musicDesID.length)
+		},
+		getData:function(){
+			api.getPersonalized()
+			.then((response)=>{
+				let dataResult = response.data.result
+				this.musicLists = dataResult;
+			})
+			api.getPrivatecontent()
+			.then((response)=>{
+				let dataResult = response.data.result
+				this.soleLists = dataResult;
+			}),
+			api.getBroadcastingStation()
+			.then((response)=>{
+				let dataResult = response.data.result
+				this.stationLists = dataResult;
+			}),
+			api.getPersonalizedMv()
+			.then((response)=>{
+				let dataResult = response.data.result
+				this.recoMvLists = dataResult;
+			})
+		}
+		
+ 	}	
  }
 
 </script>
@@ -132,6 +175,11 @@ export default {
 <style lang="less">
 .music-content{
 	width: 100% !important;
+	&:after{
+			content:'';
+			clear:both;
+			display:block;
+		}
 	/* 轮播图部分*/
 	.carousel-figure{
 		overflow: hidden;
@@ -173,17 +221,66 @@ export default {
 			}
 		}
 	}
+	.recommend-playlist{
+		margin:20px 0 0 0;
+		&:after{
+			content:'';
+			clear:both;
+			display:block;
+		}
+		.music-list-item-sole{
+			width:46%;
+			margin: 2%;
+			float: left;
+			height: 140px;
+			background-size:100% 100%;
+			}
+		.recommend-title{
+			font-size:16px;
+			i{
+				display:inline-block;
+				vertical-align: middle;
+				width:16px;
+				height:16px;
+				margin:-2px 5px 0 8px;
+			}
+			.recommend-icon{
+				background:url(../../../static/img/reco.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.sole-icon{
+				background:url(../../../static/img/sole.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.news-icon{
+				background:url(../../../static/img/news2.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.station-icon{
+				background:url(../../../static/img/station.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.mv-icon{
+				background:url(../../../static/img/MV-re.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+		}
+	}
 	/* 推荐音乐列表部分 */
 	.music-list-item{
-		width:46%;
+		width:29%;
 		margin: 2%;
 		float: left;
-		height: 160px;
+		height: 140px;
 		background-size:100% 100%;
-		.imgWrap{
+		
+		
+	}
+}
+.imgWrap{
 			display: block !important;
 			width: 100%;
-			height: 120px;
+			height: 100px;
 			background-size: 100% 100%;
 			overflow:hidden;
 			.music-num{
@@ -219,13 +316,22 @@ export default {
 				}
 			}
 		}
-		.music-des{
-			font-size: 14px;
+.music-des{
+			font-size: 12px;
 			font-family: "sans-serif";
 			margin: 4px 0 0 2px;
 		    font-size: 12px;
+		    width: 100%;
+    		height: 33px;
 		    line-height: 16px;
+		    overflow: hidden;
+		    text-overflow : ellipsis;
 		}
-	}
+.sole-bottom{
+	width:96% !important;
 }
+.recoMv{
+	width:45% !important;
+}
+
 </style>

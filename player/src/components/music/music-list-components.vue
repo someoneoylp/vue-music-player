@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<transition name="fade">
+		<div>
 		<div class="music-list-info">
-			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundColor:this.$route.params.bgColor}">
+			<div class="list-info-header">
 				<router-link @click.native="init()" to="/" class="back">
-					
 				</router-link>
 				<span class="music-title">
 					<span v-if="">歌单</span>
@@ -38,6 +38,8 @@
 			 <musicList></musicList> 
 		</div>
 	</div>
+	</transition>
+	
 </template>
 
 <script>
@@ -65,26 +67,14 @@ export default {
 	},
 	computed:{
 		...mapState({
-			hidNav: state => state.hidNav,
-			scrollToBelow:state=>state.scrollToBelow
+			hidNav: state => state.hidNav
 		})
 	},
-	methods:{
-  	init:function(){
+	 methods:{
+    	init:function(){
 			this.$store.state.hidNav = true
-		},
-		getScroll:function(){
-			this.scroll = document.body.scrollTop
-			if(this.scroll>=30){
-				this.$store.state.scrollToBelow = true
-			}else{
-				this.$store.state.scrollToBelow = false
-			}	
 		}
- 	},
- 	mounted(){
-		window.addEventListener('scroll',this.getScroll)
-	}
+ 	}	
 }
 </script>
 
@@ -204,11 +194,10 @@ export default {
 		}
 	}
 }
-.scrollFixed{
-	position: fixed;
-	top:0;
-	left: 0;
-	width: 100%;
-	background-color: rgba(0, 0, 0, 0.2);
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s
+}
+.fade-enter, .fade-leave-active {
+  opacity: 0
 }
 </style>

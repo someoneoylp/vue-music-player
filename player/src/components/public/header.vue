@@ -16,21 +16,38 @@
 		        <router-link :to="{name:'friends',query:{key:3}}" active-class="friAct"></router-link>
 		    </i>
 		</div>
-		<div class="search"></div>
+		<div class="search"></div> 
+		
 	</div>
 </template>
 
 <script>
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import api from '../../api/index';
 import {change} from "../../store/index.js"
 export default {
+	data () {
+		return {
+			host : this.HOST
+		}
+	},
+	 mounted () {
+	
+	},
 	methods:{
     	showSideBar:function(){
 			this.$store.state.hidSidebar = true
 			console.log(this.$store.state.hidSidebar)
+		},
+		getData:function(){
+			api.getTopPlaylistResource()
+			.then((response)=>{
+				console.log(response.data);
+			})
 		}
- 	}
+	}
 }
+		
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
