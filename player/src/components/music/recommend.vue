@@ -17,7 +17,7 @@
 		<div class="music-list-content">
 			<div class="recommend-playlist">
 				<p class="recommend-title"><i class="recommend-icon"></i>推荐歌单</p>
-				<div class="music-list-item" v-for="musicList in musicLists"> 
+				<div class="music-list-item" v-for="musicList in persRecoLists"> 
 					<div class="imgWrap">
 						<router-link @click.native="init()" :to="{name:'musicList',params: {id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
@@ -30,7 +30,7 @@
 			<div class="recommend-playlist">
 				<p class="recommend-title"><i class="sole-icon"></i>独家放送</p>
 				<div class="music-list-item-sole" v-for="(soleList,index) in soleLists" v-if="index>0"> 	<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
+						<router-link to="/" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
 							
 						</router-link> 
 					</div>
@@ -38,7 +38,7 @@
 				</div>
 				<div class="music-list-item sole-bottom" v-for="(soleList,index) in soleLists" v-if="index==0"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
+						<router-link to="/" class="imgWrap" v-bind:style="{backgroundImage:'url(' + soleList.picUrl + ')'}">
 							
 						</router-link> 
 					</div>
@@ -46,22 +46,22 @@
 				</div>
 			</div>
 			<div class="recommend-playlist">
-				<p class="recommend-title"><i class="news-icon"></i>最新音乐</p>
-				<div class="music-list-item" v-for="musicList in musicLists"> 
+				<p class="recommend-title"><i class="recommend-icon"></i>最新音乐</p>
+				<div class="music-list-item" v-for="musicList in persRecoLists"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" :to="{name:'musicList',params:{id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
+						<router-link @click.native="init()" :to="{name:'musicList',params: {id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
 							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>
 						</router-link> 
 					</div>
-					<p class="music-des">{{musicList.name}} </p>
+					<p class="music-des">{{musicList.name}}</p>
 				</div>
 			</div>
 			<div class="recommend-playlist">
 				<p class="recommend-title"><i class="mv-icon"></i>推荐MV</p>
 				<div class="music-list-item recoMv" v-for="recoMvList in recoMvLists"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + recoMvList.picUrl + ')'}">
+						<router-link to="/" class="imgWrap" v-bind:style="{backgroundImage:'url(' + recoMvList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{recoMvList.playCount}}</p>
 						</router-link> 
 					</div>
@@ -72,9 +72,9 @@
 				<p class="recommend-title"><i class="station-icon"></i>主播电台</p>
 				<div class="music-list-item" v-for="stationList in stationLists"> 
 					<div class="imgWrap">
-						<router-link @click.native="init()" to="/musicList" class="imgWrap" v-bind:style="{backgroundImage:'url(' + stationList.picUrl + ')'}">
-							<p class="music-num"><i class="music-num-icon"></i> {{stationList.playCount}}</p>
-							<p class="music-user"><i class="music-user-icon"></i>{{stationList.author}}</p>
+						<router-link to="/" class="imgWrap" v-bind:style="{backgroundImage:'url(' + stationList.picUrl + ')'}">
+							
+							<p class="music-user"><i class="music-user-icon"></i>{{stationList.program.radio.name}}</p>
 						</router-link> 
 					</div>
 					<p class="music-des">{{stationList.name}} </p>
@@ -92,13 +92,11 @@ var musicLists = [];
 var soleLists =[];
 var newestLists = [];
 var recoMvLists =[];
-var stationLists = [];
 /*屏幕宽度*/
 var winWidth = screen.width
 export default {
 	data(){
 		return {
-			musicLists : musicLists,
 			 pic:["../../../static/img/16.jpg","../../../static/img/6.jpg","../../../static/img/1.jpg","../../../static/img/16.jpg"],
              now:"./images/1.jpg",
              winWidth : winWidth,
@@ -107,14 +105,15 @@ export default {
              i:0,
              soleLists : soleLists,
              newestLists:newestLists,
-             recoMvLists:recoMvLists,
-             stationLists:stationLists
 		}
 	},
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			recoListId:state=>state.recoListId
+			recoListId:state=>state.recoListId,
+			persRecoLists:state=>state.persRecoLists,
+			recoMvLists:state=>state.recoMvLists,
+			stationLists:state=>state.stationLists
 		})
 	},
 	beforeMount:function(){
@@ -142,8 +141,14 @@ export default {
 			api.getPersonalized()
 			.then((response)=>{
 				let dataResult = response.data.result
-				this.musicLists = dataResult;
-			})
+				this.$store.state.persRecoLists = dataResult;
+				for(let i=0;i<dataResult.length;i++){
+					let playCount = this.$store.state.persRecoLists[i].playCount
+					if(playCount>9999){
+						this.$store.state.persRecoLists[i].playCount = this.$store.state.persRecoLists[i].playCount.toString().slice(0,2)+'万'
+					} 
+				}
+			}),
 			api.getPrivatecontent()
 			.then((response)=>{
 				let dataResult = response.data.result
@@ -152,12 +157,18 @@ export default {
 			api.getBroadcastingStation()
 			.then((response)=>{
 				let dataResult = response.data.result
-				this.stationLists = dataResult;
+				this.$store.state.stationLists = dataResult;
 			}),
 			api.getPersonalizedMv()
 			.then((response)=>{
 				let dataResult = response.data.result
-				this.recoMvLists = dataResult;
+				this.$store.state.recoMvLists = dataResult;
+				for(let i=0;i<dataResult.length;i++){
+					let playCount = this.$store.state.recoMvLists[i].playCount
+					if(playCount>9999){
+						this.$store.state.recoMvLists[i].playCount = this.$store.state.recoMvLists[i].playCount.toString().slice(0,2)+'万'
+					} 
+				}
 			})
 		}
 		
@@ -279,7 +290,7 @@ export default {
 			background-size: 100% 100%;
 			overflow:hidden;
 			.music-num{
-				width: 40%;
+				width: 53%;
 				height: 18px;
 				float: right;
 				line-height: 18px;
@@ -298,7 +309,7 @@ export default {
 			.music-user{
 				width: 100%;
 				height: 15px;
-				margin:100px 0 0 5px;
+				margin:83px 0 0 0px;
 				color: #ffffff;
 				font-size: 12px;
 				.music-user-icon{

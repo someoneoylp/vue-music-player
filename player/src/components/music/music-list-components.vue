@@ -1,43 +1,47 @@
 <template>
 	<transition name="fade">
 		<div>
-		<div class="music-list-info">
-			<div class="list-info-header">
-				<router-link @click.native="init()" to="/" class="back">
-				</router-link>
-				<span class="music-title">
-					<span v-if="">歌单</span>
-					<span v-if="show">{{}}</span>
-				</span>
-				<span class="list-more" @click="">
-					<i></i>
-					<i></i>
-					<i></i>
-				</span>
-				<span class="search"></span>
+			<div class="music-list-info-cover" v-bind:style="{backgroundImage:'url(' + coverImgUrl + ')'}">
+				
 			</div>
-			<div class="list-info-content">
-				<div class="list-detail">
-					<div class="name-detail">
-						<div v-bind:style="{backgroundImage:'url(' + musicListInfo.backgroundUrl + ')'}" class="imgBox">
-							<p class="music-num"><i class="music-num-icon"></i>{{musicListInfo.playQuantity}}</p>
-							<i class="tips"></i>
+			<div class="music-list-info">
+				<div class="list-info-header">
+					<router-link @click.native="init()" to="/" class="back">
+					</router-link>
+					<span class="music-title">
+						<span v-if="">歌单</span>
+						<span v-if="show">{{}}</span>
+					</span>
+					<span class="list-more" @click="">
+						<i></i>
+						<i></i>
+						<i></i>
+					</span>
+					<span class="search"></span>
+				</div>
+				<div class="list-info-content">
+					<div class="list-detail">
+						<div class="name-detail">
+							<div v-bind:style="{backgroundImage:'url(' + coverImgUrl + ')'}" class="imgBox">
+								<p class="music-num"><i class="music-num-icon"></i>{{playCount}}</p>
+								<i class="tips"></i>
+							</div>
+						</div>
+						<div class="tit">
+							<h2>{{name}}</h2>
+							<p class="list-author"><i class="user-pic" :style="{backgroundImage:'url(' + avatarUrl + ')'}">	</i>{{nickname}} <i class="go"></i></p>
 						</div>
 					</div>
-					<div class="tit">
-						<h2>{{musicListInfo.describe}}</h2>
-						<p class="list-author"><i class="user-pic">	</i>{{musicListInfo.author}} <i class="go"></i></p>
+					<div class="list-operation">
+						<contentOp></contentOp>
 					</div>
 				</div>
-				<div class="list-operation">
-					<contentOp></contentOp>
-				</div>
+			</div>
+			
+			<div class="list-content">
+				 <musicList></musicList> 
 			</div>
 		</div>
-		<div class="list-content">
-			 <musicList></musicList> 
-		</div>
-	</div>
 	</transition>
 	
 </template>
@@ -47,18 +51,14 @@ import contentOp from ".././public/content-operation.vue"
 import musicList from ".././public/music-list.vue"
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import {change} from "../../store/index.js"
-const musicListInfo = {
-	author:"一般不淡定",
-	playQuantity:"800万",
-	describe:"【毕业季】我们不说再见",
-	backgroundUrl:'../../../static/img/list-6.jpg'
-}
+import api from '../../api/index'
+
 
 export default {
 	data(){
 		return {
 			show:false,
-			musicListInfo:musicListInfo
+			id:this.$route.params.id
 		}
 	},
 	components:{
@@ -67,22 +67,56 @@ export default {
 	},
 	computed:{
 		...mapState({
-			hidNav: state => state.hidNav
+			hidNav: state => state.hidNav,
+			recoListId: state => state.recoListId,
+			subscribedCount:state=>state.subscribedCount,
+			commentCount:state=>state.commentCount,
+			shareCount:state=>state.shareCount,
+			musicLists:state=>state.musicLists,
+			name:state=>state.name,
+			nickname:state=>state.nickname,
+			coverImgUrl:state=>state.coverImgUrl,
+			avatarUrl:state=>state.avatarUrl,
+			trackCount:state=>state.trackCount,
+			playCount:state =>state.playCount
 		})
 	},
-	 methods:{
+ 	mounted:function () {
+		this.getPlayList()
+	},
+	methods:{
     	init:function(){
 			this.$store.state.hidNav = true
+		},
+		getPlayList(){
+			console.log(this.id)
+			api.getPlayListDeatil(this.id)
+			.then((response)=>{
+				this.$store.state.musicLists = response.data.result.tracks
+				this.$store.state.subscribedCount = response.data.result.subscribedCount
+				this.$store.state.commentCount = response.data.result.commentCount
+				this.$store.state.shareCount = response.data.result.shareCount
+				this.$store.state.nickname = response.data.result.creator.nickname
+				this.$store.state.name = response.data.result.name
+				this.$store.state.coverImgUrl = response.data.result.coverImgUrl
+				this.$store.state.avatarUrl=response.data.result.creator.avatarUrl
+				this.$store.state.playCount = response.data.result.playCount
+				if(this.$store.state.playCount>9999){
+					this.$store.state.playCount = this.$store.state.playCount.toString().slice(0,2)+'万'
+				} 
+				this.$store.state.trackCount = response.data.result.tracks.length
+			})
 		}
- 	}	
+ 	}
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .music-list-info{
+	position:relative;
 	width:100%;
-	background:rgb(214, 235, 236);
+	z-index:2;
 	.back{
 		display:inline-block;
 		width:30px;
@@ -125,7 +159,7 @@ export default {
 }
 .list-info-content{
 	height:180px;
-	background:#d6ebec;
+	
 	.list-detail{
 		display:flex;
 		width:90%;
@@ -139,7 +173,7 @@ export default {
 				background-size:100% 100%;
 				overflow:hidden;
 				.music-num{
-					width: 50%;
+					width: 44%;
 					height: 18px;
 					float: right;
 					line-height: 18px;
@@ -179,7 +213,6 @@ export default {
 					height:20px;
 					border-radius:20px;
 					margin-right:4px;
-					background:url(../../../static/img/list-6.jpg) left center no-repeat;
 					background-size:100% 100%;
 					vertical-align:middle;
 				}
@@ -199,5 +232,16 @@ export default {
 }
 .fade-enter, .fade-leave-active {
   opacity: 0
+}
+.music-list-info-cover{
+	position:absolute;
+		width:100%;
+		height:205px;
+		background-size:100% 100%;
+		-webkit-filter: blur(50px); 
+	    -moz-filter: blur(50px);
+	    -ms-filter: blur(50px);    
+	    filter: blur(50px);
+	    z-index:1;
 }
 </style>
