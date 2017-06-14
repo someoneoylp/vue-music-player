@@ -13,7 +13,7 @@ import {
 	TopListBriefResource,
   TopListResource,
   SearchSuggestResource,//搜索音乐（推荐）
-  SearchResource//搜索音乐
+  SearchResource,//搜索音乐
 	SongDetail,
 	SongUrl,
 	SongLyric

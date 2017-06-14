@@ -4,7 +4,7 @@
 		<div class="play-music-cover" :style="{height:screenHeight+'px',backgroundImage:'url(' + songDetail[0].album.blurPicUrl + ')'}"></div>
 		<div class="play-music-wrap">
 			<div class="play-music-header">
-				<router-link :to="{name:'musicList',params:{id:songListID}}" class="back"></router-link>
+				<a @click="goBack()" class="back"></a>
 				<p class="music-info">
 					<span>{{songDetail[0].name}}</span>
 					<span>{{songDetail[0].artists[0].name}}</span>
@@ -239,6 +239,9 @@ export default {
 		processMousedown:function(e){
 			let l = e.offsetX-2;
 			this.myBarLeft = l
+		},
+		goBack(){
+			this.$router.go(-1);
 		}
 	}
 
