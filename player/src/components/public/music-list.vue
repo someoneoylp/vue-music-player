@@ -8,10 +8,10 @@
 				</router-link>
 			</li>
 			<li v-for="(musicList,index) in musicLists" class="list-item">
-				<router-link :to="{name:'playMusic',query:{key:index}}" class="serial-num">
+				<router-link :to="{name:'playMusic',params:{id:musicList.id},query:{currentindex:index}}" class="serial-num">
 					<p>{{index+1}}</p>
 				</router-link>
-				<router-link :to="{name:'playMusic',query:{key:index}}" class="music-title">
+				<router-link :to="{name:'playMusic',params:{id:musicList.id},query:{currentindex:index}}" class="music-title">
 					<p class="">
 						<span class="music-name">
 							{{musicList.name}} <span v-if="musicList.alias">- {{musicList.alias[0]}}</span>
@@ -38,11 +38,25 @@
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import {change} from "../../store/index.js"
 export default {
+	/*data(){
+
+	},*/
 	computed:{
 		...mapState({
 			musicLists: state => state.musicLists,
 			trackCount: state => state.trackCount
 		})
+<<<<<<< HEAD
+=======
+	},
+	mounted:function(){
+		this.init();
+	},
+	methods:{
+		init:function(){
+			console.log(this.musicLists);
+		}
+>>>>>>> 6f0d9098d9ae2445f50a5a3ff70da6690aa85618
 	}
 }
 </script>

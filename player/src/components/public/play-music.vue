@@ -1,27 +1,30 @@
 <template>
-	<div class="play-music" :style="{height:screenHeight+'px'}">
-		<div class="play-music-cover" :style="{height:screenHeight+'px'}"></div>
+<transition name="fade">
+	<div class="play-music" :style="{height:screenHeight+'px'}" @mousemove="bodyMousemove($event)" @mouseup="bodyMouseup($event)">
+		<div class="play-music-cover" :style="{height:screenHeight+'px',backgroundImage:'url(' + songDetail[0].album.blurPicUrl + ')'}"></div>
 		<div class="play-music-wrap">
 			<div class="play-music-header">
-				<router-link to="/musicList" class="back"></router-link>
+				<router-link :to="{name:'musicList',params:{id:songListID}}" class="back"></router-link>
 				<p class="music-info">
-					<span>{{musicInfo.name}}</span>
-					<span>{{musicInfo.singer}}</span>
+					<span>{{songDetail[0].name}}</span>
+					<span>{{songDetail[0].artists[0].name}}</span>
 				</p>
 				<i class="share-icon"></i>
 			</div>
 			<HR width="80%" color=#ffffff SIZE=1 /> 
 			<div class="play-music-content">
-				<div class="disk-content">
+				<div class="disk-content" @click="showLyric()" v-if="!isShowLyric">
 					<i class="stick" :class="{ isPlay : play}"></i>
-					<div class="disk" @click="playMusic()">
-						<img :src="musicInfo.backgroundUrl" alt="">
+					<div class="disk">
+						<img :src="songDetail[0].album.blurPicUrl" alt="">
 					</div>
 				</div>
-				<div class="lyric"></div>
+				<div class="lyric" v-if="isShowLyric" @click="showLyric()">
+					<ul><li class="lyricIndex" v-for="(lyric,index) in lyric">{{lyric}}</li></ul>
+				</div>
 			</div>
 			<div class="play-music-operation">
-				<div class="music-operation">
+				<div class="music-operation" v-if="!isShowLyric">
 					<span class="operation-item" @click="like()">
 						<p class="like-icon operation-icon" :class="{likeActive:likeActive}"></p>
 					</span>
@@ -29,7 +32,7 @@
 						<p class="download-icon operation-icon"></p>
 					</span>
 					<span class="operation-item">
-						<i class="comment-num">{{musicInfo.commentNum}}</i>
+						<i class="comment-num">12</i>
 						<p class="comment-icon operation-icon"></p>
 					</span>
 					<span class="operation-item">
@@ -40,26 +43,28 @@
 						</p>
 					</span>
 				</div>
-				<audio id="audio">
-					<source :src="musicInfo.musicUrl" type="audio/ogg">
+				<audio id="audio" :src="musicUrl" type="audio/ogg">
 				</audio>
 				<div class="play-operation">
 					<div class="speed">
-						<i class="paly-time">3.00</i>
-						<p class="progress-bar timeline" @touchstart="setMusicTime()"></p>
-						<i class="end-time">4.56</i>
+						<i class="play-time">{{playTime}}</i>
+					    <div class="process" id="process" ref="abc" style="width:200px" @mousedown="processMousedown($event)">
+					        <div class="process-bar" :style="{width:processBarWidth+'px'}"></div>
+					        <span class="bar" id="mybar" @mousedown="myBarMousedown($event)" @mouseup="bodyMouseup($event)" :style="{left:myBarLeft+'px'}"></span>
+					    </div>
+					    <i class="end-time">{{allTime}}</i>
 					</div>
 					<div class="play-operation-content">
 						<span class="play-way" @click="">
 							<p class="" :class="{}"></p>
 						</span>
-						<span class="last" @click="">
+						<span class="last" @click="plLast()">
 							<p class="" :class="{}"></p>
 						</span>
-						<span class="play" @click="playMusic()">
-							<p class="" :class="{}"></p>
+						<span class="play">
+							<p class="" :class="{}" @click="playMusic()"></p>
 						</span>
-						<span class="next" @click="">
+						<span class="next" @click="plNext()">
 							<p class="" :class="{}"></p>
 						</span>
 						<span class="paly-list" @click="">
@@ -70,41 +75,170 @@
 			</div>
 		</div>
 	</div>
+	</transition>
 </template>
 
 <script>
+import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import api from '../../api/index'
+import {change} from "../../store/index.js"
 const screenHeight = screen.height 
-const musicInfo = {
-	name:"晴天",
-	singer:"周杰伦",
-	lyric:"",
-	commentNum:123,
-	backgroundUrl:"../../../static/img/list-4.jpg",
-	musicUrl:'../../../static/music/陶辚竹 - 一直很安静.mp3'
-}
+const screenWidth =document.body.offsetWidth
+
 export default {
 	data(){
 		return {
+			id:this.$route.params.id,
+			currentindex:this.$route.query.currentindex,
 			screenHeight:screenHeight,
-			musicInfo:musicInfo,
 			play:false,
-			likeActive:false
+			likeActive:false,
+			isDrag:false,
+			isShowLyric:false,
+			ProcessId:document.getElementById('process'),
+			myBar:document.getElementById('mybar'),
+			body:document.body,
+			audio:document.querySelector('#audio'),
+			mouseX:'',
+			left:'',
+			myBarLeft:0,
+			processBarWidth:'',
+			songDetail:[],
+			screenWidth:screenWidth/2,
+			musicUrl:'',
+			allTime:'',//播放时间
+			playTime:'0:00',
+			timer:'',
+			goToTime:0,
+			lyric:[],
+			lyricTime:[]//每个歌词词出现的时间
 		}
 	},
+	computed:{
+		...mapState({
+			songListID: state => state.songListID
+		})
+	},
+	mounted:function(){
+	 	this.getSongDetail()
+	 	this.$store.state.songListID = this.$store.state.songListID
+	 	
+    },
 	methods:{
-		playMusic:function(){
-			var audio =document.querySelector('#audio');
-			if(!this.play){
-	            audio.play();
-	        }else if(this.play){
-	        	 audio.pause();
-	        }
-	        this.play = !this.play;
+		//获取歌单详情
+		getSongDetail:function(){
+			api.getSongDetail(this.id)
+			.then((response)=>{
+				console.log(response.data)
+				this.songDetail = response.data.songs
+			}),
+			api.getSongUrl(this.id,999000)
+			.then((response)=>{
+				console.log(response.data)
+				this.musicUrl = response.data.data[0].url
+			})
+			api.getSongLyric(this.id)
+			.then((response)=>{
+				var that = this
+				var lyricAll = response.data.lrc.lyric.split('[')
+				for(let i=0;i<lyricAll.length;i++){
+					that.lyric[i] = lyricAll[i].split(']')[1]
+					that.lyricTime[i] = lyricAll[i].split(']')[0].split('.')[0]
+				}
+			})
+
+		},
+		//是否显示歌词
+		showLyric:function(){
+			this.isShowLyric = !this.isShowLyric
+		},
+		playMusic:function(e){
+			//播放音乐，设置时间
+			let second  = this.songDetail[0].duration.toString().substring(0,3)
+			
+			if(parseInt(second %60)<10){
+		           		this.allTime = parseInt(second /60)+':0'+parseInt(second %60)
+		           	}else{
+		           		this.allTime = parseInt(second /60)+':'+parseInt(second %60)
+		    }
+		    var that = this
+			if(this.play==false){
+		           that.audio.play();
+		           
+		           that.timer = setInterval(function(){
+
+		           	/*if(this.lyricTime[t]==that.audio.currentTime){
+		           		console.log("歌词应该动动啦")
+		           	}*/
+		           	if(parseInt(that.audio.currentTime %60)<10){
+		           		that.playTime = parseInt(that.audio.currentTime /60)+':0'+parseInt(that.audio.currentTime %60)
+		           	}else{
+		           		that.playTime = parseInt(that.audio.currentTime /60)+':'+parseInt(that.audio.currentTime %60)
+		           	}
+		           	if(that.myBarLeft<200){
+						that.myBarLeft=(that.audio.currentTime/second)*200+200/second
+					}
+				},1000)
+			}else if(this.play===true){
+				window.clearInterval(this.timer)
+				that.audio.pause();
+			}
+	        this.play =!this.play;
+		},
+		//上一首歌单
+		plLast:function(){
+			api.getPlayListDeatil(this.$store.state.songListID)
+			.then((response)=>{
+				if(this.currentindex!==0){
+					this.id = response.data.result.tracks[--this.currentindex].id
+					this.getSongDetail();
+				}
+			})
+		},
+		//下一首歌曲
+		plNext:function(){
+			api.getPlayListDeatil(this.$store.state.songListID)
+			.then((response)=>{
+				var songLen = response.data.result.tracks.length
+				if(this.currentindex<songLen){
+					this.id = response.data.result.tracks[++this.currentindex].id
+					this.getSongDetail();
+				}
+			})
+			this.body
 		},
 		like:function(){
 			this.likeActive = !this.likeActive
 		},
-		setMusicTime:function(e){
+		//鼠标点击在进度条的时候触发
+		myBarMousedown:function(e){
+			this.isDrag = true;
+		    //点击的时候位置
+		     this.mouseX = e.offsetX;
+		    return false;
+		},
+		bodyMouseup:function(e){
+			  this.isDrag = false;
+		      return false;
+		},
+		bodyMousemove:function(e){
+			 if(this.isDrag){
+			 	var mx = e.clientX
+			 	var sc = parseInt(this.screenWidth-100)
+			 	//鼠标想相对于div移动距离
+			 	var fullwidth = mx-sc
+	            if(fullwidth<0){
+	                fullwidth=0;
+	            }else if(fullwidth>200){
+	            	fullwidth = 200
+	            }
+	            this.myBarLeft =fullwidth;
+	            this.processBarWidth = fullwidth
+			}
+		},
+		processMousedown:function(e){
+			let l = e.offsetX-2;
+			this.myBarLeft = l
 		}
 	}
 
@@ -120,14 +254,15 @@ export default {
 		width:100%;
 		background:url("../../../static/img/list-6.jpg") center center no-repeat;
 		background-size:100% 100%;
-		-webkit-filter: blur(50px); 
-	    -moz-filter: blur(50px);
-	    -ms-filter: blur(50px);    
-	    filter: blur(50px);
+		-webkit-filter: blur(100px); 
+	    -moz-filter: blur(100px);
+	    -ms-filter: blur(100px);    
+	    filter: blur(100px);
 	    z-index:1;
 	}
     .play-music-wrap{
     	position:relative;
+    	height:100%;
     	z-index:12;
 		hr{
 			margin:0 auto;
@@ -210,6 +345,22 @@ export default {
 	    			}
 	    		}
 	    	}
+	    	.lyric{
+	    		width:80%;
+	    		margin:0 auto;
+	    		overflow:hidden;
+	    		height:389px;
+	    		ul{
+	    			margin-top:180px;
+	    			.lyricIndex{
+		    			text-align: center;
+		    			color:#939290;
+		    			font-size: 14px;
+	    				line-height: 34px;
+		    		}
+	    		}
+	    		
+	    	}
     	}
     	.play-music-operation{
     		.music-operation{
@@ -259,7 +410,7 @@ export default {
     			margin:0 auto;
 	    		.speed{
 	    			text-align:center;
-					.paly-time,.end-time{
+					.play-time,.end-time{
 						color:#ffffff;
 						font-style: normal;
 						font-size:10px;
@@ -314,5 +465,38 @@ export default {
     }
 	
 }
+.wrap{
+    
+    border: 1px solid;
+    padding: 20px;
+}
 
+.process{
+    position: relative;
+    display:inline-block;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+.process-bar{
+    height: 4px;
+    border-radius: 2px;
+}
+.bar{
+    top: -4px;
+    left: 0px;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #91cdea;
+    display: inline-block;
+    cursor: pointer;
+}
+.fade-enter-active,.fade-leave-active{
+	  transition:all 0.5s
+}
+.fade-enter,.fade-leave{
+  transform :translate3d(0,0,0)
+}
 </style>

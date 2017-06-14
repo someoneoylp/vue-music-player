@@ -29,6 +29,10 @@ const state = {
 	playCount:'',//播放量
 	searchKeyWord:'',//search的关键词
 	typeId:0//search的类型（单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*）
+	songListID:'',//歌单id
+	lastID:0,//上一首
+	nextID:0,//下一首
+	index:0
 }
 
 const mutations = {

@@ -14,6 +14,9 @@ import {
   TopListResource,
   SearchSuggestResource,//搜索音乐（推荐）
   SearchResource//搜索音乐
+	SongDetail,
+	SongUrl,
+	SongLyric
 } from './resource.js';
 
 export default {
@@ -23,7 +26,7 @@ export default {
 			params:{
 				id:id
 			}
-		})
+		},'')
 	},
 	//获取歌手专辑列表， id为歌手id
 	 getArtistAlbumResource(id,size){
@@ -93,6 +96,7 @@ export default {
 	      }
 	    });
 	  },
+<<<<<<< HEAD
 		  /**
 	   * @method 搜索音乐(推荐，包括songs单曲、artists歌手、albums专辑、mvs、playlists歌单)
 	   * @param keywords 关键词
@@ -128,5 +132,35 @@ export default {
 	    var offset = offset || 1;
 	    var str = "s="+keywords+"&type="+type+"&limit="+limit+"&offset="+offset;
 	    return axios.post(SearchResource, str);
+=======
+	  //获取歌单详情
+	  getSongDetail(id){
+	  	return axios.get(SongDetail, {
+	      params: {
+	        id: id,
+	        ids:'[' + id + ']'
+	      }
+	    });
+	  },
+	  getSongUrl(id,br){
+	  	return axios.get(SongUrl,{
+	  		params:{
+	  			ids:'[' + id + ']',
+	  			br:br,
+	  			'csrf_token':''
+	  		}
+	  	})
+	  },
+	  //获取歌词
+	  getSongLyric(id){
+	  	return axios.get(SongLyric,{
+	  		params:{
+	  			id:id,
+	  			lv:-1,
+	  			kv:-1,
+	  			tv:-1
+	  		}
+	  	})
+>>>>>>> 6f0d9098d9ae2445f50a5a3ff70da6690aa85618
 	  }
 }
