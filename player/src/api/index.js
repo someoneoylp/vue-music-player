@@ -11,7 +11,10 @@ import {
 	BroadcastingStation,
 	PlayListDeatil,
 	TopListBriefResource,
-  TopListResource
+  	TopListResource,
+  	SongDetail,
+  	SongUrl,
+  	SongLyric
 } from './resource.js';
 
 export default {
@@ -21,7 +24,7 @@ export default {
 			params:{
 				id:id
 			}
-		})
+		},'')
 	},
 	//获取歌手专辑列表， id为歌手id
 	 getArtistAlbumResource(id,size){
@@ -90,5 +93,34 @@ export default {
 	        id: id
 	      }
 	    });
+	  },
+	  //获取歌单详情
+	  getSongDetail(id){
+	  	return axios.get(SongDetail, {
+	      params: {
+	        id: id,
+	        ids:'[' + id + ']'
+	      }
+	    });
+	  },
+	  getSongUrl(id,br){
+	  	return axios.get(SongUrl,{
+	  		params:{
+	  			ids:'[' + id + ']',
+	  			br:br,
+	  			'csrf_token':''
+	  		}
+	  	})
+	  },
+	  //获取歌词
+	  getSongLyric(id){
+	  	return axios.get(SongLyric,{
+	  		params:{
+	  			id:id,
+	  			lv:-1,
+	  			kv:-1,
+	  			tv:-1
+	  		}
+	  	})
 	  }
 }

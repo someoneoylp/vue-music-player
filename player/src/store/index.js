@@ -26,7 +26,11 @@ const state = {
 	nickname:'',//歌单创建者名称
 	coverImgUrl:'',//背景图片
 	avatarUrl:'',//歌单创建者头像
-	playCount:''//播放量
+	playCount:'',//播放量
+	songListID:'',//歌单id
+	lastID:0,//上一首
+	nextID:0,//下一首
+	index:0
 }
 
 const mutations = {

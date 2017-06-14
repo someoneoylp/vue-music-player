@@ -10,7 +10,6 @@
 					</router-link>
 					<span class="music-title">
 						<span v-if="">歌单</span>
-						<span v-if="show">{{}}</span>
 					</span>
 					<span class="list-more" @click="">
 						<i></i>
@@ -57,7 +56,6 @@ import api from '../../api/index'
 export default {
 	data(){
 		return {
-			show:false,
 			id:this.$route.params.id
 		}
 	},
@@ -83,15 +81,17 @@ export default {
 	},
  	mounted:function () {
 		this.getPlayList()
+		this.$store.state.songListID = this.id
+		console.log("执行"+this.$store.state.songListID)
 	},
 	methods:{
     	init:function(){
 			this.$store.state.hidNav = true
 		},
 		getPlayList(){
-			console.log(this.id)
 			api.getPlayListDeatil(this.id)
 			.then((response)=>{
+				
 				this.$store.state.musicLists = response.data.result.tracks
 				this.$store.state.subscribedCount = response.data.result.subscribedCount
 				this.$store.state.commentCount = response.data.result.commentCount
