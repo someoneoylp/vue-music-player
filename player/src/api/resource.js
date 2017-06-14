@@ -14,4 +14,4 @@ export const SearchSuggestResource = '/api/search/suggest/web';//搜索（推荐
 export const SearchResource = '/api/search/pc/';//搜索
 export const SongDetail = '/api/song/detail/';//获取歌单详情
 export const SongUrl = '/api/song/enhance/player/url';//获取音乐url
-export const SongLyric = '/api/song/lyric'//获取歌词
+export const SongLyric = '/api/song/lyric';//获取歌词

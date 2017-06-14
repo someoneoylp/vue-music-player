@@ -57,7 +57,7 @@ export default {
     	return axios.get(RecommendSongsResource);
   	},
   	//获取推荐歌单
-	  	getPersonalized () {
+	  getPersonalized () {
 	    return axios.get(PersonalizedResource);
 	  	},
   	 // 获取独家放送
@@ -96,8 +96,36 @@ export default {
 	      }
 	    });
 	  },
-<<<<<<< HEAD
-		  /**
+	  //获取歌单详情
+	  getSongDetail(id){
+	  	return axios.get(SongDetail, {
+	      params: {
+	        id: id,
+	        ids:'[' + id + ']'
+	      }
+	    });
+	  },
+	  getSongUrl(id,br){
+	  	return axios.get(SongUrl,{
+	  		params:{
+	  			ids:'[' + id + ']',
+	  			br:br,
+	  			'csrf_token':''
+	  		}
+	  	})
+	  },
+	  //获取歌词
+	  getSongLyric(id){
+	  	return axios.get(SongLyric,{
+	  		params:{
+	  			id:id,
+	  			lv:-1,
+	  			kv:-1,
+	  			tv:-1
+	  		}
+	  	})
+	  },
+  	/**
 	   * @method 搜索音乐(推荐，包括songs单曲、artists歌手、albums专辑、mvs、playlists歌单)
 	   * @param keywords 关键词
 	   * @param type 1为单曲，10为专辑， 100为歌手， 1000为歌单， 1002为用户
@@ -132,35 +160,5 @@ export default {
 	    var offset = offset || 1;
 	    var str = "s="+keywords+"&type="+type+"&limit="+limit+"&offset="+offset;
 	    return axios.post(SearchResource, str);
-=======
-	  //获取歌单详情
-	  getSongDetail(id){
-	  	return axios.get(SongDetail, {
-	      params: {
-	        id: id,
-	        ids:'[' + id + ']'
-	      }
-	    });
-	  },
-	  getSongUrl(id,br){
-	  	return axios.get(SongUrl,{
-	  		params:{
-	  			ids:'[' + id + ']',
-	  			br:br,
-	  			'csrf_token':''
-	  		}
-	  	})
-	  },
-	  //获取歌词
-	  getSongLyric(id){
-	  	return axios.get(SongLyric,{
-	  		params:{
-	  			id:id,
-	  			lv:-1,
-	  			kv:-1,
-	  			tv:-1
-	  		}
-	  	})
->>>>>>> 6f0d9098d9ae2445f50a5a3ff70da6690aa85618
 	  }
 }

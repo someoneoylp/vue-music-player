@@ -38,25 +38,11 @@
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import {change} from "../../store/index.js"
 export default {
-	/*data(){
-
-	},*/
 	computed:{
 		...mapState({
 			musicLists: state => state.musicLists,
 			trackCount: state => state.trackCount
 		})
-<<<<<<< HEAD
-=======
-	},
-	mounted:function(){
-		this.init();
-	},
-	methods:{
-		init:function(){
-			console.log(this.musicLists);
-		}
->>>>>>> 6f0d9098d9ae2445f50a5a3ff70da6690aa85618
 	}
 }
 </script>
