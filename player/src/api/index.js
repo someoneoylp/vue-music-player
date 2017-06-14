@@ -11,7 +11,9 @@ import {
 	BroadcastingStation,
 	PlayListDeatil,
 	TopListBriefResource,
-  TopListResource
+  TopListResource,
+  SearchSuggestResource,//搜索音乐（推荐）
+  SearchResource//搜索音乐
 } from './resource.js';
 
 export default {
@@ -90,5 +92,41 @@ export default {
 	        id: id
 	      }
 	    });
+	  },
+		  /**
+	   * @method 搜索音乐(推荐，包括songs单曲、artists歌手、albums专辑、mvs、playlists歌单)
+	   * @param keywords 关键词
+	   * @param type 1为单曲，10为专辑， 100为歌手， 1000为歌单， 1002为用户
+	   * @param limit 返回数据限制
+	   * @param offset 数据偏移量
+	   * @returns response  数据返回值
+	   */
+	  //没用
+	  // getSearchResource (keywords, type, limit, offset) {
+	  //   return axios.post(TopListResource, {
+	  //     data: {
+	  //         type: type || 1,
+	  //         limit : limit || 10,
+	  //         offset : offset || 1
+	  //     }
+	  //   });
+	  // },
+	  getSearchSuggestResource (keywords, type, limit, offset) {
+	    var type = type || 1;
+	    var limit = limit || 20;
+	    var offset = offset || 1;
+	    var str = "s="+keywords+"&type="+type+"&limit="+limit+"&offset="+offset;
+	    return axios.post(SearchSuggestResource, str);
+	  },
+	  /*
+	  * @method 搜索音乐
+	  * 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*
+	  */
+	  getSearchResource (keywords, type, limit, offset) {
+	    var type = type || 1;
+	    var limit = limit || 20;
+	    var offset = offset || 1;
+	    var str = "s="+keywords+"&type="+type+"&limit="+limit+"&offset="+offset;
+	    return axios.post(SearchResource, str);
 	  }
 }

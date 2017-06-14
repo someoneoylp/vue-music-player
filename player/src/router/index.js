@@ -9,6 +9,7 @@ import musicList from "@/components/music/music-list-components.vue"
 import rankingEachPage from "@/components/music/ranking-each-page.vue"
 import playMusic from "@/components/public/play-music.vue"
 import search from "@/components/search/search.vue"
+import searchContentView from "@/components/search/search-content-view.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -63,7 +64,19 @@ export default new Router({
     {
       path: '/search',
       name: 'search',
-      component: search
+      component: search,
+
+      children:[
+        {
+          path: '/search/searchContentView/:id',
+          name: 'searchContentView',
+          component: searchContentView
+        },
+        {
+          path: '/search',
+          redirect: '/search/searchContentView/1'
+        }
+      ]
     },
     {
        path: '*', 

@@ -1,34 +1,101 @@
 <template>
 	<div class="search">
+		<!--搜索框-->
 		<div class="search-bar">
 			<router-link @click.native="init()" to="/music/rankingList" class="back"></router-link>
 			<div class="search-part">
-				<input type="text" value="搜索音乐、歌手、歌词、用户" name="search-words" />
-				<i class=""></i>
+				<input type="text" placeholder="搜索音乐、歌手、歌词、用户" name="search-words" v-model="keyword" @keyup.self="search($event)" />
+				<i v-show="keyword" class="icon" @click="endSearch()"></i>
 			</div>		
 		</div>
-		<div class="search-type"><p><i></i>歌手分类></p></div>
-		<div class="search-hot">
-			<h2>热门搜索</h2>
-			<ul>
-				<li>test</li>
-				<li>tsssest</li>
+		<!--搜索框输入关键词keyword后的下拉菜单-->
+		<div v-if="keyword" class="search-result">
+			<li><p>搜索“{{keyword}}”</p></li>
+			<ul v-for="item in result" >
+				<li v-for="obj in item" v-if="item!=result.order" @click="chooseResult($event)"><i class="icon"></i><span>{{obj.name}}</span></li>
 			</ul>
 		</div>
+		<!--搜索框未输入时 下方的推荐-->
+		<div v-if="!showResultPage" class="search-tips">
+			<div class="search-type"><p><i></i>歌手分类></p></div>
+			<div class="search-hot">
+				<h2>热门搜索</h2>
+				<ul>
+					<li v-for="item in hotSearch">{{item}}</li>
+				</ul>
+			</div>	
+		</div>
+		<!--选择关键词keyword后的结果tab页-->
+		<div v-if="showResultPage" class="result-page">
+			<div class="nav">
+				<div v-for="(item,index) in tabNav" :class="[item.divClass,{'isActive':item.isActive}]" @click="change(index)">
+					<router-link :to="{name:item.routerLink, params:{id: item.typeId}}">{{item.a}}</router-link>
+				</div>
+			</div>			
+			<transition :name="transitionName2">
+				<router-view></router-view>	
+			</transition>
+		</div>	
 	</div>
 </template>
 <script>
+import api from '../../api'
 import {mapState} from 'vuex'
 export default{
 	name:'search',
+	data(){
+		return{
+			keyword:'',
+			result: '',
+			hotSearch: ['安河桥', '追光者', '2U', '随便你', '我爱你', '王菲', '周杰伦', '你就不要想起我'],
+			showResultPage: false,
+			searchIsActive: true,
+			searchIsDefault: false,
+			tabNav: [
+				{divClass:'song', isActive:true, routerLink:'searchContentView', typeId:1, a:'单曲'},
+				{divClass:'artist', isActive:false, routerLink:'searchContentView', typeId:100, a:'歌手'},
+				{divClass:'album', isActive:false, routerLink:'searchContentView', typeId:10, a:'专辑'},
+				{divClass:'playlist', isActive:false, routerLink:'searchContentView', typeId:1000, a:'歌单'},
+				{divClass:'mv', isActive:false, routerLink:'searchContentView', typeId:0, a:'MV'},
+			]
+		}
+	},
 	computed:{
 		...mapState({
-			hidNav:state=>state.hidNav
+			hidNav:state=>state.hidNav,
+			transitionName2: state=>state.transitionName2
 		})
 	},
 	methods:{
 		init(){
 			this.$store.state.hidNav = true;
+		},
+		//监听input的搜索函数
+		search(){
+			var input = event.target;	
+			api.getSearchSuggestResource(input.value).then((response)=>{
+				console.log(input.value);
+				console.log(response.data);
+				this.result = response.data.result;
+			}).catch((error)=>{
+				console.log("搜索出错:"+error);
+			})
+		},
+		endSearch(){
+			this.keyword = '';
+		},
+		//搜索的下拉菜单
+		chooseResult(){
+			this.showResultPage = true;
+			this.$store.state.searchKeyWord = event.target.parentNode.getElementsByTagName('span')[0].innerHTML;
+			console.log(this.$store.state.searchKeyWord);
+			this.keyword = '';
+		},
+		//tab切换函数
+		change:function(index){
+			this.tabNav.map(function(value,i,arr){
+				i==index? value.isActive=true: value.isActive=false;
+			});
 		}
 	}
 	
@@ -38,6 +105,7 @@ export default{
 	.search{
 		width: 100%;
 		height: 100%;
+		/*搜索框*/
 		.search-bar{
 			height: 3.5rem;
 			background-color: #b72712;
@@ -55,57 +123,150 @@ export default{
 				height: 30px;
 				margin: 15px 10px auto auto;
 				float: right;
-				//margin-top: 5px;
 				border-bottom: 1px solid rgba(255,255,255,.38);
 				input[name='search-words']{
-					width: 90%;
+					width: 88%;
 					height: 100%;
+					outline: 0;
 					font-size: 1.1rem;
 					color: rgba(255,255,255,.38);
 					float: left;
 					background-color: #b72712;
 				}
-			}	
-		}
-		.search-type{
-			width: 100%;
-			height: 3rem;
-			line-height: 3rem;
-			text-align: center;
-			border-bottom: 1px solid #ddd;
-			p{
-				position: relative;
-				width: 150px;
-    		margin: 0 auto;
-    		font-size: 1rem;
-				i{
-					display: block;
-					position: absolute;
-					left: 0;
-					top: 10px;
+				input[name='search-words']::-webkit-input-placeholder { /* WebKit browsers */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']::-moz-placeholder { /* Mozilla Firefox 19+ */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']:-ms-input-placeholder { /* Internet Explorer 10+ */ 
+					color: rgba(255,255,255,.38); 
+				}
+				.icon{
+					display:inline-block;
 					width: 30px;
 					height: 30px;
-					background: url("../../assets/friends.png") center center no-repeat;
+					margin-top: -3px;
+					background:url("../../../static/img/close.png") center center no-repeat;
+					background-size:100%;
+				} 
+			}	
+		}
+		/* 搜索框输入关键词keyword后的下拉菜单 */
+		.search-result{
+			float: left;
+			position: absolute;
+			margin-left: 50%;
+    	transform: translateX(-50%);
+			z-index: 999;
+	    width: 90%;
+	    background-color: #fff;
+	    min-height: 100px;
+    	li{
+    		text-indent: 1rem;
+    		text-align: left;
+    		width: 100%;
+    		height: 40px;
+    		line-height: 40px;
+				border-bottom: 1px solid #ddd;
+				font-size: 1rem;
+				color: #797878;
+				position: relative;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				p{
+					color:#4558b9;
+				}
+				.icon{
+					position: absolute;
+					top: 10px;
+					left: 1rem;
+					width: 20px;
+					height: 20px;
+					background:url("../../../static/img/search2.png") center center no-repeat;
+					background-size:100%;
+				}
+				span{
+					float: right;
+					width: 88%;
+				}
+    	}
+		}
+		/* 搜索框未输入时 下方的推荐 */
+		.search-tips{
+			.search-type{
+				width: 100%;
+				height: 3rem;
+				line-height: 3rem;
+				text-align: center;
+				border-bottom: 1px solid #ddd;
+				p{
+					position: relative;
+					width: 150px;
+	    		margin: 0 auto;
+	    		font-size: 1rem;
+					i{
+						display: block;
+						position: absolute;
+						left: 0;
+						top: 10px;
+						width: 30px;
+						height: 30px;
+						background: url("../../assets/friends.png") center center no-repeat;
+					}	
+				}
+			}
+			.search-hot{
+				float: left;
+				h2{
+					font-size: 0.9rem;
+					color: #797979;
+					margin: 25px auto auto 10px;
+					overflow: hidden;
+				}
+				ul{
+					padding: 10px; 
+					margin-left: -10px;
+					margin-right: -10px;
+				}
+				li{
+					float: left;
+					margin: 5px;
+					padding: 5px 10px;
+					border-radius: 15px;
+					color: #797979;
+					border:1px solid #ddd;
+				}
+			}	
+		}
+		/* 选择关键词keyword后的结果tab页 */
+		.result-page{
+			position: absolute;
+			width: 100%;
+			.nav{
+				display:flex;
+				height: 35px;
+				background: #FCFDFD;
+				.song,.artist,.album,.playlist,.mv{
+					flex:1;
+					text-align: center;
+					line-height: 35px;
+					font-size: 14px;
+				}	
+			}
+			.search-content-view{
+				.play-all{
+					display: none;
 				}	
 			}
 		}
-		.search-hot{
-			h2{
-				font-size: 0.9rem;
-				color: #797979;
-				margin: 25px auto auto 10px;
-			}
-			ul{
-				width: 100%;
-				padding: 10px; 
-			}
-			li{
-				float: left;
-				margin-left: 10px;
-				padding: 5px 10px;
-				border-radius: 15px;
-				color: #797979;
-				border:1px solid #ddd;
+		.isActive{
+			border-bottom: 2px solid #B72712;
+			a{
+				color: #B72712;
 			}
 		}
 	}

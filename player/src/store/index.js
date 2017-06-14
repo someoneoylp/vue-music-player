@@ -26,7 +26,9 @@ const state = {
 	nickname:'',//歌单创建者名称
 	coverImgUrl:'',//背景图片
 	avatarUrl:'',//歌单创建者头像
-	playCount:''//播放量
+	playCount:'',//播放量
+	searchKeyWord:'',//search的关键词
+	typeId:0//search的类型（单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*）
 }
 
 const mutations = {

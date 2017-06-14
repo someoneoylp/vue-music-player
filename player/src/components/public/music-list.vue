@@ -14,14 +14,14 @@
 				<router-link :to="{name:'playMusic',query:{key:index}}" class="music-title">
 					<p class="">
 						<span class="music-name">
-							{{musicList.name}} <span v-if="musicList.alias.length">- {{musicList.alias[0]}}</span>
+							{{musicList.name}} <span v-if="musicList.alias">- {{musicList.alias[0]}}</span>
 							<!-- <i v-if="musicList.mv" class="mv-icon">MV</i> -->
 						</span>
-						<span class="music-singer" v-for="artist in musicList.artists">
+						<span v-if="musicList.artists" class="music-singer" v-for="artist in musicList.artists">
 							<i class="isDown" v-if="musicList.down"></i>
 							{{artist.name}} 
 						</span>
-						<span class="music-album"> - {{musicList.album.name}}</span>
+						<span v-if="musicList.album" class="music-album"> - {{musicList.album.name}}</span>
 					</p>
 				</router-link>
 				<p class="music-more" @click="">
@@ -43,15 +43,6 @@ export default {
 			musicLists: state => state.musicLists,
 			trackCount: state => state.trackCount
 		})
-	},
-	mounted:function(){
-		this.init();
-	},
-	methods:{
-		init:function(){
-			console.log(this.musicLists);
-			console.log(this.trackCount);
-		}
 	}
 }
 </script>
