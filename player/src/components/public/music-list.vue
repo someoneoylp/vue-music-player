@@ -65,7 +65,7 @@ export default {
 		color:#000000;
 		span{
 			font-size:12px;
-			color:#B1B1B2;
+			color:#797979;
 		}
 	}	
 	
@@ -90,7 +90,7 @@ export default {
 		height: 45px;
 		text-align: center;
 		line-height: 40px;
-		color:#B1B1B2;
+		color:#797979;
 		font-size:14px;
 	}
 	.music-title{
@@ -120,7 +120,7 @@ export default {
 		}
 		.music-singer{
 			font-size:12px;
-			color:#B1B1B2;
+			color:#797979;
 			.isDown{
 				display:inline-block;
 				width:12px;
@@ -132,7 +132,7 @@ export default {
 		}
 		.music-album{
 			font-size:12px;
-			color:#B1B1B2;
+			color:#797979;
 			width: 100%;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -149,8 +149,8 @@ export default {
 			clear:both;
 			width:2px;
 			height:2px;
-			border:1px solid #B1B1B2;
-			background:#B1B1B2;
+			border:1px solid #797979;
+			background:#797979;
 			border-radius:2px;
 			margin: 0px 15px 2px 0;
 		}

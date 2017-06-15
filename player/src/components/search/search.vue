@@ -2,7 +2,7 @@
 	<div class="search">
 		<!--搜索框-->
 		<div class="search-bar">
-			<router-link @click.native="init()" to="/music/rankingList" class="back"></router-link>
+			<router-link @click.native="init()" to="/music" class="back"></router-link>
 			<div class="search-part">
 				<input type="text" placeholder="搜索音乐、歌手、歌词、用户" name="search-words" v-model="keyword" @keyup.self="search($event)" />
 				<i v-show="keyword" class="icon" @click="endSearch()"></i>
@@ -21,7 +21,7 @@
 			<div class="search-hot">
 				<h2>热门搜索</h2>
 				<ul>
-					<li v-for="item in hotSearch">{{item}}</li>
+					<li v-for="item in hotSearch" @click="hotSearchResult($event)">{{item}}</li>
 				</ul>
 			</div>	
 		</div>
@@ -40,6 +40,7 @@
 </template>
 <script>
 import api from '../../api'
+import searchContentView from './search-content-view.vue'
 import {mapState} from 'vuex'
 export default{
 	name:'search',
@@ -55,16 +56,21 @@ export default{
 				{divClass:'song', isActive:true, routerLink:'searchContentView', typeId:1, a:'单曲'},
 				{divClass:'artist', isActive:false, routerLink:'searchContentView', typeId:100, a:'歌手'},
 				{divClass:'album', isActive:false, routerLink:'searchContentView', typeId:10, a:'专辑'},
-				{divClass:'playlist', isActive:false, routerLink:'searchContentView', typeId:1000, a:'歌单'},
-				{divClass:'mv', isActive:false, routerLink:'searchContentView', typeId:0, a:'MV'},
+				{divClass:'playlist', isActive:false, routerLink:'searchContentView', typeId:1000, a:'歌单'}
+				// {divClass:'mv', isActive:false, routerLink:'searchContentView', typeId:0, a:'MV'},
 			]
 		}
 	},
 	computed:{
 		...mapState({
 			hidNav:state=>state.hidNav,
-			transitionName2: state=>state.transitionName2
+			transitionName2: state=>state.transitionName2,
+			searchKeyWord: state=>state.searchKeyWord,
+			notFound: state=>state.notFound
 		})
+	},
+	watch:{
+		'searchKeyWord': 'searchAll'
 	},
 	methods:{
 		init(){
@@ -74,8 +80,8 @@ export default{
 		search(){
 			var input = event.target;	
 			api.getSearchSuggestResource(input.value).then((response)=>{
-				console.log(input.value);
-				console.log(response.data);
+				// console.log(input.value);
+				// console.log(response.data);
 				this.result = response.data.result;
 			}).catch((error)=>{
 				console.log("搜索出错:"+error);
@@ -88,17 +94,61 @@ export default{
 		chooseResult(){
 			this.showResultPage = true;
 			this.$store.state.searchKeyWord = event.target.parentNode.getElementsByTagName('span')[0].innerHTML;
-			console.log(this.$store.state.searchKeyWord);
+			console.log('key'+this.$store.state.searchKeyWord);
 			this.keyword = '';
 		},
 		//tab切换函数
-		change:function(index){
+		change(index){
 			this.tabNav.map(function(value,i,arr){
 				i==index? value.isActive=true: value.isActive=false;
 			});
+		},
+		hotSearchResult(){
+			this.showResultPage = true;
+			this.$store.state.searchKeyWord = event.target.innerHTML;
+		},
+		searchAll(){
+			this.$store.state.notFound = [false, false, false];
+			api.getSearchResource(this.searchKeyWord,1).then((response)=>{
+				this.$store.state.musicLists = response.data.result.songs;
+				console.log('歌曲'+this.searchKeyWord);
+				console.log(response.data.result.songs);	
+			});
+
+			console.log('歌手'+this.searchKeyWord);
+			api.getSearchSuggestResource(this.searchKeyWord,100).then((response)=>{
+				if(typeof(response.data.result.artists)=='undefined'){
+					this.$store.state.notFound[0] = true;
+					console.log(this.$store.state.notFound[0]);
+				}else{
+					this.$store.state.artist = response.data.result.artists[0];
+				}
+			});
+
+			
+			api.getSearchResource(this.searchKeyWord,10).then((response)=>{
+				if(typeof(response.data.result.albums)=="undefined"){
+					this.$store.state.notFound[1] = true;
+					console.log(this.$store.state.notFound[1]);
+				}else{
+					this.$store.state.albums = response.data.result.albums;
+				}
+				console.log('专辑'+this.searchKeyWord);
+				console.log(response.data.result.albums);
+			});
+
+			
+			api.getSearchResource(this.searchKeyWord,1000).then((response)=>{
+				if(typeof(response.data.result.playlists)=="undefined"){
+					this.$store.state.notFound[2] = true;
+				}else{
+					this.$store.state.playlists = response.data.result.playlists;
+				}
+				console.log('歌单'+this.searchKeyWord);
+				console.log(response.data.result.playlists);
+			});
 		}
-	}
-	
+	}	
 } 
 </script>
 <style lang="less">
@@ -261,6 +311,15 @@ export default{
 				.play-all{
 					display: none;
 				}	
+				.notFoundTips{
+					line-height: 200px;
+			    text-align: center;
+			    font-size: 14px;
+				}
+				.list-item{
+					height: 60px;
+					line-height: 20px;
+				}
 			}
 		}
 		.isActive{

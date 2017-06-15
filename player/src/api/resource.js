@@ -15,3 +15,5 @@ export const SearchResource = '/api/search/pc/';//搜索
 export const SongDetail = '/api/song/detail/';//获取歌单详情
 export const SongUrl = '/api/song/enhance/player/url';//获取音乐url
 export const SongLyric = '/api/song/lyric';//获取歌词
+export const SearchAlbumResource = 'https://bird.ioliu.cn/v1?url=http://118.89.226.181:3000/api/album';//搜索album详情页
+export const SearchArtistResource = 'https://bird.ioliu.cn/v1?url=http://118.89.226.181:3000/api/artists';//搜索album详情页

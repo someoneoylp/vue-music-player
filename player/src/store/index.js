@@ -32,7 +32,11 @@ const state = {
 	songListID:'',//歌单id
 	lastID:0,//上一首
 	nextID:0,//下一首
-	index:0
+	index:0,
+	artist:[],//search artists数据
+	albums:[],//search albums数据
+	playlists:[],//search playlists数据
+	notFound:[false,false,false]//search数据是否找到
 }
 
 const mutations = {

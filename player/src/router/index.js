@@ -10,6 +10,7 @@ import rankingEachPage from "@/components/music/ranking-each-page.vue"
 import playMusic from "@/components/public/play-music.vue"
 import search from "@/components/search/search.vue"
 import searchContentView from "@/components/search/search-content-view.vue"
+import searchArtist from "@/components/search/search-artist.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -71,6 +72,11 @@ export default new Router({
           path: '/search/searchContentView/:id',
           name: 'searchContentView',
           component: searchContentView
+        },
+        {
+          path:'/search/searchArtist',
+          name: 'searchArtist',
+          component: searchArtist
         },
         {
           path: '/search',

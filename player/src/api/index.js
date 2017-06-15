@@ -16,7 +16,9 @@ import {
   SearchResource,//搜索音乐
 	SongDetail,
 	SongUrl,
-	SongLyric
+	SongLyric,
+	SearchAlbumResource,
+	SearchArtistResource
 } from './resource.js';
 
 export default {
@@ -29,7 +31,7 @@ export default {
 		},'')
 	},
 	//获取歌手专辑列表， id为歌手id
-	 getArtistAlbumResource(id,size){
+	getArtistAlbumResource(id,size){
 	 	return axios.get(ArtistAlbumResource,{
 	 		params:{
 	 			id:id,
@@ -133,16 +135,6 @@ export default {
 	   * @param offset 数据偏移量
 	   * @returns response  数据返回值
 	   */
-	  //没用
-	  // getSearchResource (keywords, type, limit, offset) {
-	  //   return axios.post(TopListResource, {
-	  //     data: {
-	  //         type: type || 1,
-	  //         limit : limit || 10,
-	  //         offset : offset || 1
-	  //     }
-	  //   });
-	  // },
 	  getSearchSuggestResource (keywords, type, limit, offset) {
 	    var type = type || 1;
 	    var limit = limit || 20;
@@ -160,5 +152,21 @@ export default {
 	    var offset = offset || 1;
 	    var str = "s="+keywords+"&type="+type+"&limit="+limit+"&offset="+offset;
 	    return axios.post(SearchResource, str);
+	  },
+	  // 获取专辑内容， id为专辑id
+	  getSearchAlbumResource(id){
+	  	return axios.get(SearchAlbumResource, {
+	  		params:{
+	  			id: id
+	  		}
+	  	})
+	  },
+	  // 获取歌手单曲列表， id为歌手id
+	  getSearchArtistResource(id) {
+	    return axios.get(SearchArtistResource, {
+	      params: {
+	        id: id
+	      }
+	    });
 	  }
 }
