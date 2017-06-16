@@ -11,6 +11,7 @@ import playMusic from "@/components/public/play-music.vue"
 import search from "@/components/search/search.vue"
 import searchContentView from "@/components/search/search-content-view.vue"
 import searchArtist from "@/components/search/search-artist.vue"
+import searchAlbumPage from "@/components/search/search-album-page.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -61,6 +62,11 @@ export default new Router({
       path: '/playMusic',
       name: 'playMusic',
       component: playMusic
+    },
+    {
+      path: '/searchAlbumPage',
+      name: 'searchAlbumPage',
+      component: searchAlbumPage
     },
     {
       path: '/search',

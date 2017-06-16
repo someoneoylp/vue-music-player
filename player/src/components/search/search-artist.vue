@@ -1,12 +1,12 @@
 <template>
 	<div class="artist-list">
-		<p class="notFoundTips" v-if="notFound[0]==true">{{notFoundTips}}</p>
+		<p class="notFoundTips" v-if="notFound[0]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li class="list-item">
-				<router-link :to="{name:'rankingEachPage',params:{id:artist.id}}" class="music-title">
+				<a class="music-title" @click="noMorePage($event)">
 					<img :src="artist.img1v1Url" class="artist-img" alt="">
 					<p class="artist-name">{{artist.name}}</p>
-				</router-link>
+				</a>
 			</li>
 		</ul>
 	</div>
@@ -23,13 +23,25 @@ export default {
 			notFoundTips:'很抱歉，没有搜索到该歌手。'
 		}
 	},
+	watch:{
+		searchKeyWord(){
+			this.notFoundTips = '很抱歉，没有搜索到该歌手。';
+		}
+	},
 	computed:{
 		...mapState({
 			artist: state => state.artist,
 			searchKeyWord: state => state.searchKeyWord,
 			notFound: state=>state.notFound
 		})
-	}	
+	},
+	methods:{
+		noMorePage(){
+			event.preventDefault();
+			this.notFoundTips = "很抱歉，没有该歌手信息api";
+			this.$store.state.notFound = [true,false,false]; 
+		}
+	}
 }
 </script>
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 <template>
 	<div class="playlist-list">
-		<p class="notFoundTips" v-if="notFound[2]==true">{{notFoundTips}}</p>
+		<p class="notFoundTips" v-if="notFound[2]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li v-for="(playlist,index) in playlists" class="list-item">
 				<router-link :to="{name:'rankingEachPage',params:{id:playlist.id}}" class="music-title">

@@ -1,9 +1,9 @@
 <template>
 	<div class="album-list">
-		<p class="notFoundTips" v-if="notFound[1]==true">{{notFoundTips}}</p>
+		<p class="notFoundTips" v-if="notFound[1]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li v-for="(album,index) in albums" class="list-item">
-				<router-link :to="{name:'rankingEachPage',params:{id:album.id}}" class="music-title">
+				<router-link :to="{name:'searchAlbumPage',params:{id:album.id}}" class="music-title">
 					<img :src="album.picUrl" class="artist-img" alt="">
 					<p class="album-name">{{album.name}}</p>
 					<p class="album-singer" v-for="artist in album.artists">{{artist.name}}</p>

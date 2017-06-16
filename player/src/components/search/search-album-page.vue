@@ -4,9 +4,8 @@
 			<div class="music-list-info-cover" v-bind:style="{backgroundImage:'url(' + coverImgUrl + ')'}">
 			</div>
 			<div class="music-list-info">
-				<div class="list-info-header" :class="{scrollFixed:scrollToBelow}">
-					<router-link @click.native="init()" to="/" class="back">
-					</router-link>
+				<div class="list-info-header">
+					<a @click="init()" class="back"></a>
 					<span class="music-title">
 						<span v-if="">歌单</span>
 					</span>
@@ -20,14 +19,11 @@
 				<div class="list-info-content">
 					<div class="list-detail">
 						<div class="name-detail">
-							<div v-bind:style="{backgroundImage:'url(' + coverImgUrl + ')'}" class="imgBox">
-								<p class="music-num"><i class="music-num-icon"></i>{{playCount}}</p>
-								<i class="tips"></i>
-							</div>
+							<div v-bind:style="{backgroundImage:'url(' + coverImgUrl + ')'}" class="imgBox"></div>
 						</div>
 						<div class="tit">
 							<h2>{{name}}</h2>
-							<p v-if="avatarUrl" class="list-author"><i class="user-pic" :style="{backgroundImage:'url(' + avatarUrl + ')'}">	</i>{{nickname}} <i class="go"></i></p>
+							<p class="list-author"><i class="user-pic" :style="{backgroundImage:'url(' + avatarUrl + ')'}">	</i>{{nickname}} <i class="go"></i></p>
 						</div>
 					</div>
 					<div class="list-operation">
@@ -56,12 +52,11 @@ export default {
 	data(){
 		return {
 			id:this.$route.params.id,
-			nickname : '',
-			name : '',
-			coverImgUrl : '',
-			avatarUrl : '',
-			playCount : 0,
-			scrollToBelow:false
+			commentCount : 0,
+			shareCount: 0,
+			name :'',
+			nickname :'',
+			coverImgUrl :''
 		}
 	},
 	components:{
@@ -71,8 +66,8 @@ export default {
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			recoListId: state => state.recoListId,
-			musicLists:state=>state.musicLists,
+			avatarUrl:state=>state.avatarUrl,
+			musicLists: state=>state.musicLists,
 			subscribedCount:state=>state.subscribedCount,
 			commentCount:state=>state.commentCount,
 			shareCount:state=>state.shareCount,
@@ -80,43 +75,26 @@ export default {
 		})
 	},
  	mounted:function () {
- 		window.addEventListener('scroll',this.getScroll);
-		this.getPlayList();
-		this.$store.state.songListID = this.id;
+		this.getPlayList()
+		this.$store.state.songListID = this.id
 	},
 	methods:{
     init:function(){
-			this.$store.state.hidNav = true
-		},
-		getScroll:function(){
-			this.scroll = document.body.scrollTop;
-			if(this.scroll>=30){
-				this.scrollToBelow = true;
-			}else{
-				this.scrollToBelow = false;
-			}	
+    	this.$router.go(-1);
+			this.$store.state.hidNav = true;
 		},
 		getPlayList(){
-			api.getPlayListDeatil(this.id)
+			api.getSearchAlbumResource(this.id)
 			.then((response)=>{
-				//复用的组件的数据
-				this.$store.state.musicLists = response.data.result.tracks;
-				this.$store.state.subscribedCount = response.data.result.subscribedCount;
-				this.$store.state.commentCount = response.data.result.commentCount;
-				this.$store.state.shareCount = response.data.result.shareCount;
-				this.$store.state.trackCount = response.data.result.tracks.length;
-				//其他非组件的数据
-				this.nickname = response.data.result.creator.nickname;
-				this.name = response.data.result.name;
-				this.coverImgUrl = response.data.result.coverImgUrl;
-				this.avatarUrl=response.data.result.creator.avatarUrl;
-				var count = response.data.result.playCount;
-				if(count>9999){
-					this.playCount =  count.toString().slice(0,-4)+'万';
-				}else{
-					this.playCount = count;
-				}
-				
+				console.log(response.data);
+				this.$store.state.musicLists = response.data.songs;
+				//this.$store.state.subscribedCount = response.data.album.info.subscribedCount;
+				this.$store.state.commentCount = response.data.album.info.commentCount;
+				this.$store.state.shareCount = response.data.album.info.shareCount;
+				this.$store.state.trackCount = response.data.album.size;
+				this.name = response.data.album.name;
+				this.nickname = response.data.album.artist.name;
+				this.coverImgUrl = response.data.album.picUrl;
 			})
 		}
  	}
@@ -168,14 +146,6 @@ export default {
 			margin: 0px 15px 2px 0;
 		}
 	}
-	.scrollFixed{
-		position: fixed;
-		top:0;
-		left: 0;
-		width: 100%;
-		height: 35px;
-		background-color: rgba(0, 0, 0, 0.2);
-	}
 }
 .list-info-content{
 	height:180px;
@@ -221,9 +191,11 @@ export default {
 		}
 		.tit{
 			flex:3;
-			padding: 10px 4px 0 6px;
 			font-size:15px;
 			color:#ffffff;
+			h2{
+				margin: 10px auto auto 10px; 
+			}
 			.list-author{
 				margin-top:20px;
 				font-size:12px;

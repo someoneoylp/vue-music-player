@@ -34,7 +34,7 @@ export default {
 			//10万以上才以万为单位
 			if(subCount>100000){
 				subCount = subCount.toString();
-				return subCount.slice(0,-4)+'.'+ subCount.slice(-5,-4)+'万';
+				return subCount.slice(0,-4)+'.'+ subCount.slice(-4,-3)+'万';
 			}else{
 				return subCount;
 			}

@@ -61,6 +61,9 @@ export default{
 			]
 		}
 	},
+	mounted(){
+		this.$store.state.hidNav = false;
+	},
 	computed:{
 		...mapState({
 			hidNav:state=>state.hidNav,
@@ -80,8 +83,6 @@ export default{
 		search(){
 			var input = event.target;	
 			api.getSearchSuggestResource(input.value).then((response)=>{
-				// console.log(input.value);
-				// console.log(response.data);
 				this.result = response.data.result;
 			}).catch((error)=>{
 				console.log("搜索出错:"+error);
@@ -109,27 +110,28 @@ export default{
 		},
 		searchAll(){
 			this.$store.state.notFound = [false, false, false];
+			console.log(this.$store.state.notFound );
 			api.getSearchResource(this.searchKeyWord,1).then((response)=>{
 				this.$store.state.musicLists = response.data.result.songs;
 				console.log('歌曲'+this.searchKeyWord);
 				console.log(response.data.result.songs);	
 			});
 
-			console.log('歌手'+this.searchKeyWord);
+			
 			api.getSearchSuggestResource(this.searchKeyWord,100).then((response)=>{
 				if(typeof(response.data.result.artists)=='undefined'){
-					this.$store.state.notFound[0] = true;
-					console.log(this.$store.state.notFound[0]);
+					this.$store.state.notFound = [true,false,false];
 				}else{
 					this.$store.state.artist = response.data.result.artists[0];
 				}
+				console.log('歌手'+this.searchKeyWord);
+				console.log(this.$store.state.notFound );
 			});
 
 			
 			api.getSearchResource(this.searchKeyWord,10).then((response)=>{
 				if(typeof(response.data.result.albums)=="undefined"){
-					this.$store.state.notFound[1] = true;
-					console.log(this.$store.state.notFound[1]);
+					this.$store.state.notFound = [false,true,false];
 				}else{
 					this.$store.state.albums = response.data.result.albums;
 				}
@@ -140,13 +142,14 @@ export default{
 			
 			api.getSearchResource(this.searchKeyWord,1000).then((response)=>{
 				if(typeof(response.data.result.playlists)=="undefined"){
-					this.$store.state.notFound[2] = true;
+					this.$store.state.notFound = [false,false,true];
 				}else{
 					this.$store.state.playlists = response.data.result.playlists;
 				}
 				console.log('歌单'+this.searchKeyWord);
 				console.log(response.data.result.playlists);
 			});
+			
 		}
 	}	
 } 
@@ -308,6 +311,8 @@ export default{
 				}	
 			}
 			.search-content-view{
+				width: 100%;
+				height: 100%;
 				.play-all{
 					display: none;
 				}	

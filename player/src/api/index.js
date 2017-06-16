@@ -160,13 +160,5 @@ export default {
 	  			id: id
 	  		}
 	  	})
-	  },
-	  // 获取歌手单曲列表， id为歌手id
-	  getSearchArtistResource(id) {
-	    return axios.get(SearchArtistResource, {
-	      params: {
-	        id: id
-	      }
-	    });
 	  }
 }
