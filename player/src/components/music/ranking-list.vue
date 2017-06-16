@@ -47,6 +47,7 @@ export default {
 	},
 	mounted:function(){
 		this.getTopListBriefResource();
+		this.$store.state.musicNavIsActive = 2;
 	},
 	methods:{
 		init:function(){

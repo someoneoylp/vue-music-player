@@ -28,9 +28,13 @@
 		<!--选择关键词keyword后的结果tab页-->
 		<div v-if="showResultPage" class="result-page">
 			<div class="nav">
-				<div v-for="(item,index) in tabNav" :class="[item.divClass,{'isActive':item.isActive}]" @click="change(index)">
-					<router-link :to="{name:item.routerLink, params:{id: item.typeId}}">{{item.a}}</router-link>
-				</div>
+					<router-link 
+						v-for="(item,index) in tabNav" 
+						:to="{name:item.routerLink, params:{id: item.typeId}}" 
+						:class="[item.divClass, {'isActive': item.isActive}]" 
+						@click.native="change(index)">
+							{{item.a}}
+					</router-link>
 			</div>			
 			<transition :name="transitionName2">
 				<router-view></router-view>	
@@ -87,6 +91,14 @@ export default{
 			}).catch((error)=>{
 				console.log("搜索出错:"+error);
 			})
+			//按下回车键
+			if(event.keyCode == 13){
+				console.log('enter');
+				this.$store.state.searchKeyWord = input.value;
+				this.searchAll();
+				this.showResultPage = true;
+				this.endSearch();
+			}
 		},
 		endSearch(){
 			this.keyword = '';
@@ -96,7 +108,7 @@ export default{
 			this.showResultPage = true;
 			this.$store.state.searchKeyWord = event.target.parentNode.getElementsByTagName('span')[0].innerHTML;
 			console.log('key'+this.$store.state.searchKeyWord);
-			this.keyword = '';
+			this.endSearch();
 		},
 		//tab切换函数
 		change(index){
@@ -309,6 +321,10 @@ export default{
 					line-height: 35px;
 					font-size: 14px;
 				}	
+				.isActive{
+					border-bottom: 2px solid #B72712;
+					color: #B72712;
+				}
 			}
 			.search-content-view{
 				width: 100%;
@@ -325,12 +341,6 @@ export default{
 					height: 60px;
 					line-height: 20px;
 				}
-			}
-		}
-		.isActive{
-			border-bottom: 2px solid #B72712;
-			a{
-				color: #B72712;
 			}
 		}
 	}

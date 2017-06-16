@@ -5,12 +5,12 @@ import api from '../api'
 vue.use(Vuex)
 
 const state = {
-	hidNav: true,
+	hidNav: true,//一级菜单nav是否显示（初始值true：显示）
 	hidFoot:true,
-	transitionName: '',
-	transitionName2: '',
-	musicIsActive:true,
-	scrollToBelow:false,
+	transitionName: '',//一级菜单nav切换动画
+	transitionName2: '',//二级music菜单 nav切换动画
+	musicNavIsActive: 1,//音乐列表和排行表nav切换（初始值1：音乐列表nav是active状态）
+	scrollToBelow: false,//歌曲列表页面下滑时顶端是否出现搜索条（初始值false：隐藏搜索条）
 	hidSidebar:false,
 	recoListId:'',
 	persRecoLists:[],//个性推荐歌单
@@ -36,7 +36,7 @@ const state = {
 	artist:[],//search artists数据
 	albums:[],//search albums数据
 	playlists:[],//search playlists数据
-	notFound:[false,false,false]//search数据是否找到
+	notFound:[false,false,false]//search数据是否找到（初始false值：api请求找到数据）
 }
 
 const mutations = {

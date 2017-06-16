@@ -2,8 +2,7 @@
 	<div>
 		<div class="rankingEachPage" :style="{backgroundImage:'url('+coverImgUrl+')'}">
 			<div class="list-info-header" :class="{scrollFixed:scrollToBelow}" :style="{backgroundImage:'url('+coverImgUrl+')'}">
-				<router-link @click.native="init()" to="/music/rankingList" class="back">
-				</router-link>
+				<a @click="init()" class="back"></a>
 				<span class="music-title">
 					<span>歌单</span>
 				</span>
@@ -74,6 +73,7 @@ export default{
 	methods:{
 		init:function(){
 			this.$store.state.hidNav = true;
+			this.$router.go(-1);
 		},
 		getScroll:function(){
 			this.scroll = document.body.scrollTop
@@ -152,6 +152,7 @@ export default{
 		top:0;
 		left: 0;
 		width: 100%;
+		height: 35px;
 		background-color: rgba(0, 0, 0, 0.2);
 	}
 	.desc{

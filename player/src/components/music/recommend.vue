@@ -120,6 +120,7 @@ export default {
 		
 	},
 	mounted:function(){
+		this.$store.state.musicNavIsActive = 1;
 	 	//定时器，每隔2000向左移动winWidth+px
 	      var _this=this;
 	    setInterval(function(){
