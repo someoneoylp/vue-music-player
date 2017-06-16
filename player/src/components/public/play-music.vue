@@ -1,30 +1,37 @@
 <template>
-<transition name="fade">
-	<div class="play-music" :style="{height:screenHeight+'px'}" @mousemove="bodyMousemove($event)" @mouseup="bodyMouseup($event)">
-		<div class="play-music-cover" :style="{height:screenHeight+'px',backgroundImage:'url(' + songDetail[0].album.blurPicUrl + ')'}"></div>
+	<div class="play-music" :style="{height:screenHeight+'px'}">
+		<div class="play-music-cover" :style="{height:screenHeight+'px',backgroundImage:'url(' + blurPicUrl + ')'}"></div>
 		<div class="play-music-wrap">
 			<div class="play-music-header">
-				<a @click="goBack()" class="back"></a>
+				<router-link @click.native="back()" :to="{name:'musicList',params:{id:songListID}}" class="back"></router-link>
 				<p class="music-info">
-					<span>{{songDetail[0].name}}</span>
-					<span>{{songDetail[0].artists[0].name}}</span>
+					<span>{{songName}}</span>
+					<span>{{songArtistsName}}</span>
 				</p>
 				<i class="share-icon"></i>
 			</div>
 			<HR width="80%" color=#ffffff SIZE=1 /> 
 			<div class="play-music-content">
-				<div class="disk-content" @click="showLyric()" v-if="!isShowLyric">
-					<i class="stick" :class="{ isPlay : play}"></i>
+				<div class="disk-content" @click="showLyric()" v-show="!isShowLyric">
+					<i class="stick" :class="{ isPlay : playing}"></i>
 					<div class="disk">
-						<img :src="songDetail[0].album.blurPicUrl" alt="">
+						<img :src="blurPicUrl" alt="">
 					</div>
 				</div>
-				<div class="lyric" v-if="isShowLyric" @click="showLyric()">
-					<ul><li class="lyricIndex" v-for="(lyric,index) in lyric">{{lyric}}</li></ul>
+				<div class="lyric" v-show="isShowLyric" @click="showLyric()">
+					<div id="volume" class="volume" @touchmove="rangeTM($event,'volume')" @touchstart="barTS($event,'volume')" style="margin-left:16%">
+				        <div id="volume-progress" class="volume-progress"></div>
+				        <span id="volume-bar" class="volume-bar" @touchstart="barTS($event,'volume')"></span>
+					</div>
+					<div class="lyricWrap">
+						<ul id="lyricBox" :style="{marginTop:marginTop+'px'}">
+							<li class="lyricIndex" v-for="(lyrics,index) in lyric" :class="{on:lyricA}" style="height:auto">{{lyrics}}</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="play-music-operation">
-				<div class="music-operation" v-if="!isShowLyric">
+				<div class="music-operation">
 					<span class="operation-item" @click="like()">
 						<p class="like-icon operation-icon" :class="{likeActive:likeActive}"></p>
 					</span>
@@ -43,15 +50,13 @@
 						</p>
 					</span>
 				</div>
-				<audio id="audio" :src="musicUrl" type="audio/ogg">
-				</audio>
 				<div class="play-operation">
 					<div class="speed">
-						<i class="play-time">{{playTime}}</i>
-					    <div class="process" id="process" ref="abc" style="width:200px" @mousedown="processMousedown($event)">
-					        <div class="process-bar" :style="{width:processBarWidth+'px'}"></div>
-					        <span class="bar" id="mybar" @mousedown="myBarMousedown($event)" @mouseup="bodyMouseup($event)" :style="{left:myBarLeft+'px'}"></span>
-					    </div>
+						<i class="play-time">{{playTimeCurrent}}</i>
+					    <div id="range" class="range" @touchmove="rangeTM($event,'range')" @touchstart="barTS($event,'range')">
+					        <div id="range-progress" class="range-progress"></div>
+					        <span id="range-bar" class="range-bar" @touchstart="barTS($event,'range')"></span>
+					 	</div>
 					    <i class="end-time">{{allTime}}</i>
 					</div>
 					<div class="play-operation-content">
@@ -62,7 +67,7 @@
 							<p class="" :class="{}"></p>
 						</span>
 						<span class="play">
-							<p class="" :class="{}" @click="playMusic()"></p>
+							<p class="" :class="{stopPlay:playing}" @click="playMusic()"></p>
 						</span>
 						<span class="next" @click="plNext()">
 							<p class="" :class="{}"></p>
@@ -75,7 +80,6 @@
 			</div>
 		</div>
 	</div>
-	</transition>
 </template>
 
 <script>
@@ -83,168 +87,216 @@ import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import api from '../../api/index'
 import {change} from "../../store/index.js"
 const screenHeight = screen.height 
-const screenWidth =document.body.offsetWidth
-
 export default {
 	data(){
 		return {
-			id:this.$route.params.id,
-			currentindex:this.$route.query.currentindex,
-			screenHeight:screenHeight,
-			play:false,
+			lyricA:false,//是否显示歌词
 			likeActive:false,
-			isDrag:false,
 			isShowLyric:false,
-			ProcessId:document.getElementById('process'),
-			myBar:document.getElementById('mybar'),
-			body:document.body,
-			audio:document.querySelector('#audio'),
-			mouseX:'',
-			left:'',
-			myBarLeft:0,
-			processBarWidth:'',
+			screenHeight:screenHeight,
 			songDetail:[],
-			screenWidth:screenWidth/2,
-			musicUrl:'',
 			allTime:'',//播放时间
-			playTime:'0:00',
-			timer:'',
+			playTimeCurrent:'0:00',
 			goToTime:0,
-			lyric:[],
-			lyricTime:[]//每个歌词词出现的时间
+			lyric:['此歌曲无歌词~'],
+			lyricTime:[],//每个歌词词出现的时间
+			blurPicUrl:'',
+			songName:'',
+			songArtistsName:'',
+            currentLyric:2,
+            volume:0.0,
+            marginTop:150
 		}
 	},
 	computed:{
 		...mapState({
-			songListID: state => state.songListID
-		})
+			songListID: state => state.songListID,
+			playing:state=>state.playing,
+			playTime:state =>state.playTime,
+			currentindex:state=>state.currentindex
+		}) 
+	},
+	watch:{
+		//从foot页面切换过来，加载歌曲信息
+		currentindex(curVal,oldVal){
+			this.$store.state.hidFoot = false
+			this.getSongDetail()
+		},
+		//根据播放时间设置信息
+		playTime(curVal,oldVal){
+			var that = this
+			var lyricIndex = document.getElementsByClassName('lyricIndex')
+			var bar = document.getElementById('range-bar')
+			var progress = document.getElementById('range-progress')
+			var range = document.getElementById('range')
+			var second = this.$store.state.second
+			var empty=0
+			var left
+			if(Math.floor(oldVal)!==Math.floor(curVal)){
+				this.playTimeCurrent = this.setTimeFormat(this.$store.state.playTime,this.playTimeCurrent)
+				//设置进度条
+				left = (curVal/second)*range.offsetWidth
+				bar.style.webkitTransform='translate('+left+'px,-5px)';
+    			progress.style.width=left+'px';
+    			//设置歌词滚动
+				for(var i=0;i<this.lyricTime.length;i++){
+					var typeLyric=typeof that.lyric[i]
+					if(that.lyric[i]!==''&&typeLyric!=='undefined'&&this.playTimeCurrent==this.lyricTime[i].substring(1,5)){
+						that.marginTop =150-35*i
+						//歌词高亮
+						for(let j=0;j<lyricIndex.length;j++){
+							that.removeClass(lyricIndex[j],'on')
+						}
+						that.addClass(lyricIndex[i],'on')
+					}
+				}
+			}	
+			
+		},
+		//通过进度条重置播放时间
+		goToTime(curVal,oldVal){
+			this.$store.state.playTime = curVal
+		}
 	},
 	mounted:function(){
+		//页面初始化
 	 	this.getSongDetail()
 	 	this.$store.state.songListID = this.$store.state.songListID
-	 	
+	 	this.$store.state.hidFoot = false
+	 	this.init()
     },
 	methods:{
 		//获取歌单详情
 		getSongDetail:function(){
-			api.getSongDetail(this.id)
+			//加载当前播放歌曲信息
+			api.getSongDetail(this.$store.state.currentMusic)
 			.then((response)=>{
-				console.log(response.data)
 				this.songDetail = response.data.songs
+				this.blurPicUrl = this.songDetail[0].album.blurPicUrl
+				this.songName = this.songDetail[0].name
+				this.songArtistsName = this.songDetail[0].artists[0].name
 			}),
-			api.getSongUrl(this.id,999000)
-			.then((response)=>{
-				console.log(response.data)
-				this.musicUrl = response.data.data[0].url
-			})
-			api.getSongLyric(this.id)
+			api.getSongLyric(this.$store.state.currentMusic)
 			.then((response)=>{
 				var that = this
-				var lyricAll = response.data.lrc.lyric.split('[')
-				for(let i=0;i<lyricAll.length;i++){
-					that.lyric[i] = lyricAll[i].split(']')[1]
-					that.lyricTime[i] = lyricAll[i].split(']')[0].split('.')[0]
+				//判断有没有歌词
+				if(response.data.lrc.lyric){
+					var lyricAll = response.data.lrc.lyric.split('[')
+					for(let i=0;i<lyricAll.length;i++){
+						that.lyric[i] = lyricAll[i].split(']')[1]
+						that.lyricTime[i] = lyricAll[i].split(']')[0].split('.')[0]
+					}
 				}
 			})
-
+		},
+		//初始化歌曲播放时间还有歌词位置
+		init:function(){
+			this.allTime = this.setTimeFormat(this.$store.state.second,this.allTime)
+			this.marginTop = 150
 		},
 		//是否显示歌词
 		showLyric:function(){
 			this.isShowLyric = !this.isShowLyric
 		},
-		playMusic:function(e){
-			//播放音乐，设置时间
-			let second  = this.songDetail[0].duration.toString().substring(0,3)
-			
-			if(parseInt(second %60)<10){
-		           		this.allTime = parseInt(second /60)+':0'+parseInt(second %60)
-		           	}else{
-		           		this.allTime = parseInt(second /60)+':'+parseInt(second %60)
+		//设置时间格式
+		setTimeFormat:function(time,receiveTime){
+			if(parseInt(time %60)<10){
+		        receiveTime = parseInt(time /60)+':0'+parseInt(time %60)
+		    }else if(parseInt(time %60)>10){
+		        receiveTime = parseInt(time /60)+':'+parseInt(time %60)
 		    }
-		    var that = this
-			if(this.play==false){
-		           that.audio.play();
-		           
-		           that.timer = setInterval(function(){
-
-		           	/*if(this.lyricTime[t]==that.audio.currentTime){
-		           		console.log("歌词应该动动啦")
-		           	}*/
-		           	if(parseInt(that.audio.currentTime %60)<10){
-		           		that.playTime = parseInt(that.audio.currentTime /60)+':0'+parseInt(that.audio.currentTime %60)
-		           	}else{
-		           		that.playTime = parseInt(that.audio.currentTime /60)+':'+parseInt(that.audio.currentTime %60)
-		           	}
-		           	if(that.myBarLeft<200){
-						that.myBarLeft=(that.audio.currentTime/second)*200+200/second
-					}
-				},1000)
-			}else if(this.play===true){
-				window.clearInterval(this.timer)
-				that.audio.pause();
-			}
-	        this.play =!this.play;
+		    return receiveTime
+		},
+		//播放音乐，设置时间
+		playMusic:function(e){
+		    this.$store.state.playing = !this.$store.state.playing
+		},
+		//返回
+		back:function(){
+			this.$store.state.hidFoot = true
 		},
 		//上一首歌单
 		plLast:function(){
-			api.getPlayListDeatil(this.$store.state.songListID)
-			.then((response)=>{
-				if(this.currentindex!==0){
-					this.id = response.data.result.tracks[--this.currentindex].id
-					this.getSongDetail();
-				}
-			})
+			this.$store.state.changeSong = -1
 		},
 		//下一首歌曲
 		plNext:function(){
-			api.getPlayListDeatil(this.$store.state.songListID)
-			.then((response)=>{
-				var songLen = response.data.result.tracks.length
-				if(this.currentindex<songLen){
-					this.id = response.data.result.tracks[++this.currentindex].id
-					this.getSongDetail();
-				}
-			})
-			this.body
+			this.$store.state.changeSong = 1
 		},
+		//收藏
 		like:function(){
 			this.likeActive = !this.likeActive
 		},
-		//鼠标点击在进度条的时候触发
-		myBarMousedown:function(e){
-			this.isDrag = true;
-		    //点击的时候位置
-		     this.mouseX = e.offsetX;
-		    return false;
+		//进度条触发，type分为是设置声音还是播放时间
+		barTS:function(e,type){
+			this.setLeft(e,type)
+            e.preventDefault();
 		},
-		bodyMouseup:function(e){
-			  this.isDrag = false;
-		      return false;
+		//移动
+		rangeTM:function(e,type){
+			this.setLeft(e,type)
 		},
-		bodyMousemove:function(e){
-			 if(this.isDrag){
-			 	var mx = e.clientX
-			 	var sc = parseInt(this.screenWidth-100)
-			 	//鼠标想相对于div移动距离
-			 	var fullwidth = mx-sc
-	            if(fullwidth<0){
-	                fullwidth=0;
-	            }else if(fullwidth>200){
-	            	fullwidth = 200
-	            }
-	            this.myBarLeft =fullwidth;
-	            this.processBarWidth = fullwidth
-			}
+		setLeft:function(event,type){
+			var range=document.getElementById(type)
+			var bar=document.getElementById(type+"-bar")
+			var maxw = range.offsetWidth-bar.offsetWidth
+			var rangex = range.offsetLeft;
+			var half = bar.offsetWidth/2
+			var left=event.touches[0].pageX-rangex-half;
+            this.render(event,left,type);
 		},
-		processMousedown:function(e){
-			let l = e.offsetX-2;
-			this.myBarLeft = l
-		},
-		goBack(){
-			this.$router.go(-1);
-		}
-	}
+		render:function (event,value,type) {
+			var that=this
+			var range=document.getElementById(type)
+			var bar=document.getElementById(type+'-bar')
+			var maxw = range.offsetWidth-bar.offsetWidth
+			var progress=document.getElementById(type+'-progress')
+			var audio = document.querySelector('#audio')
+            var left=value;
+            if(left<=-5){
+                left=-5;
+            }
+            if(left>=maxw+5){
+                left=maxw+5;
+            }
+            
+            bar.style.webkitTransform='translate('+left+'px,-5px)';
+            progress.style.width=left+'px';
+            //设置音量
+            if(type =="volume"){
+	            this.volume=Math.ceil(left/maxw*100)/100;
+	            audio.volume = this.volume
+            }
+            //设置跳转播放进度
+            if(type=="range"){
+            	 if(typeof(event)=='object'&&(event.type=='touchstart'||event.type=='touchmove')){
+	            	this.goToTime = Math.ceil(left/maxw*100)/100;
+	            	audio.currentTime = this.songDetail[0].duration.toString().substring(0,3)*this.goToTime
+	            	that.playTime = that.setTimeFormat(audio.currentTime,that.playTime)
 
+				    for(let i=0;i<that.lyricTime.length;i++){
+				    	if(that.playTime===that.lyricTime[i].substring(1,5)){
+				    		that.currentLyric = i
+				    	}
+				    }
+	            }
+            }
+           
+        },
+        //js原生添加class和删除class
+        hasClass:function(obj, cls) {  
+		    return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
+		},
+        addClass:function(obj, cls) {  
+		    if (!this.hasClass(obj, cls)) obj.className += " " + cls
+		},
+		removeClass:function(obj, cls) {  
+		    if (this.hasClass(obj, cls)) {  
+		        var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
+		        obj.className = obj.className.replace(reg, ' ') 
+		    }  
+		}  
+	}
 }
 </script>
 
@@ -290,6 +342,7 @@ export default {
 				span{
 					display:block;
 					&:first-child{
+						width:230px;
 						font-size:16px;
 						margin:12px 0 7px 10px;
 					}
@@ -311,6 +364,7 @@ export default {
     		}
     	}
     	.play-music-content{
+    		height:60%;
     		.disk-content{
 	    		width:80%;
 	    		margin:0 auto;
@@ -352,14 +406,18 @@ export default {
 	    		width:80%;
 	    		margin:0 auto;
 	    		overflow:hidden;
-	    		height:389px;
+	    		height:364px;
 	    		ul{
-	    			margin-top:180px;
+	    			
 	    			.lyricIndex{
 		    			text-align: center;
-		    			color:#939290;
+		    			color:rgba(225,225,225,.8);
 		    			font-size: 14px;
 	    				line-height: 34px;
+	    				border:1px solid rgba(255, 255, 255, 0);
+		    		}
+		    		.on{
+		    			color:#ffffff
 		    		}
 	    		}
 	    		
@@ -417,13 +475,7 @@ export default {
 						color:#ffffff;
 						font-style: normal;
 						font-size:10px;
-					}
-					.progress-bar{
-						height:2px;
-						width:70%;
-						margin:0 auto;
-						display:inline-block;
-						background:#ffffff;
+						margin:0 10px;
 					}
 	    		}
 	    		.play-operation-content{
@@ -447,16 +499,20 @@ export default {
 						background-size:50% 50%;
 						transform:rotate(180deg);
 	    			}
-	    			.play p{
-	    				background:url("../../../static/img/play-w.png") center center no-repeat;
-						1background-size:80% 80%;
+	    			.play{
+	    				p{
+	    					background:url("../../../static/img/play-w.png") center center no-repeat;
+	    				}
+	    				.stopPlay{
+	    					background:url("../../../static/img/stopPlay.png") center center no-repeat;
+	    				}
 	    			}
 	    			.next p{
 	    				background:url("../../../static/img/next.png") center center no-repeat;
 						background-size:50% 50%;
 	    			}
 	    			.paly-list p{
-	    				background:url("../../../static/img/more.png") center center no-repeat;
+	    				background:url("../../../static/img/more-w.png") center center no-repeat;
 						background-size:50% 50%;
 	    			}
 
@@ -468,38 +524,53 @@ export default {
     }
 	
 }
-.wrap{
-    
-    border: 1px solid;
-    padding: 20px;
-}
-
-.process{
-    position: relative;
-    display:inline-block;
-    height: 2px;
-    background-color: #ffffff;
-    border-radius: 2px;
-}
-.process-bar{
-    height: 4px;
-    border-radius: 2px;
-}
-.bar{
-    top: -4px;
-    left: 0px;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    background-color: #91cdea;
-    display: inline-block;
-    cursor: pointer;
-}
-.fade-enter-active,.fade-leave-active{
-	  transition:all 0.5s
-}
-.fade-enter,.fade-leave{
-  transform :translate3d(0,0,0)
+.play-music{
+	.range,.volume{
+	    width: 68%;
+	    height: 10px;
+	    display:inline-block;
+	    position: relative;
+	    margin: auto;
+	    z-index:3;
+	    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	.range:before,.range-bar,.range-progress,.volume:before,.volume-bar,.volume-progress{
+	    position: absolute;
+	    top:50%;
+	    transform: translateY(-50%);
+	    -webkit-transform: translateY(-50%);
+	}
+	.range:before,.volume:before{
+	    content: '';
+	    display: block;
+	    background-color: #ccc;
+	    width: 100%;
+	}
+	.range:before,.range-progress,.volume:before,.volume-progress{
+	    height: 2px;
+	    left:0;
+	}
+	.range-bar,.volume-bar{
+	    position: absolute;
+	    width:10px;
+	    height: 10px;
+	    left:-5px;
+	    border-radius: 50%;
+	    background-color:#ffffff;
+	    transition: all 1s;
+	}
+	.range-progress,.volume-progress{
+	    background-color:#b72712;
+	    transition: all 1s;
+	}
+	.lyricWrap{
+	    width: 100%;
+	    height: 100%;
+	}
+	#lyricBox{
+	    transition: all 1s;
+	    overflow:auto;
+	    padding:15px 0;
+	}
 }
 </style>

@@ -8,14 +8,11 @@
 				</router-link>
 			</li>
 			<li v-for="(musicList,index) in musicLists" class="list-item">
-				<router-link :to="{name:'playMusic',params:{id:musicList.id},query:{currentindex:index}}" class="serial-num">
-					<p>{{index+1}}</p>
-				</router-link>
-				<router-link :to="{name:'playMusic',params:{id:musicList.id},query:{currentindex:index}}" class="music-title">
+				<span class="serial-num" @click="playFoot(musicList.id,index)">{{index+1}}</span>
+				<span class="music-title" @click="playFoot(musicList.id,index)">
 					<p class="">
 						<span class="music-name">
 							{{musicList.name}} <span v-if="musicList.alias">- {{musicList.alias[0]}}</span>
-							<!-- <i v-if="musicList.mv" class="mv-icon">MV</i> -->
 						</span>
 						<span v-if="musicList.artists" class="music-singer" v-for="artist in musicList.artists">
 							<i class="isDown" v-if="musicList.down"></i>
@@ -23,7 +20,7 @@
 						</span>
 						<span v-if="musicList.album" class="music-album"> - {{musicList.album.name}}</span>
 					</p>
-				</router-link>
+				</span>
 				<p class="music-more" @click="">
 					<i></i>
 					<i></i>
@@ -43,6 +40,12 @@ export default {
 			musicLists: state => state.musicLists,
 			trackCount: state => state.trackCount
 		})
+	},
+	methods:{
+		playFoot:function(id,index){
+			this.$store.state.currentMusic =id
+			this.$store.state.currentindex = index
+		}
 	}
 }
 </script>

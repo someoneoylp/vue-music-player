@@ -7,7 +7,7 @@
      <transition :name="transitionName">
       <router-view class="content-view"></router-view> 
      </transition>
-     <div v-show="hidFoot">
+     <div v-show="hidFoot" class="foot">
         <v-footer></v-footer>
      </div>
   </div>
@@ -55,12 +55,6 @@ export default {
   width:100%;
   transition: all .5s cubic-bezier(.55,0,.1,1);
 }
-/*.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s ease;
-}
-.fade-enter, .fade-leave-active {
-  opacity: 0;
-}*/
 /*往左滑*/
 .slideToRight-enter, .slideToLeft-leave-active {
   opacity: 0;
@@ -72,5 +66,12 @@ export default {
   opacity: 0;
   -webkit-transform: translate(-100%, 0);
   transform: translate(-100%, 0);
+}
+.foot{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.90);
 }
 </style>
