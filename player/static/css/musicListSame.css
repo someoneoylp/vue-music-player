@@ -1,0 +1,143 @@
+.music-list-info {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+.music-list-info .back {
+  display: inline-block;
+  width: 30px;
+  height: 35px;
+  background: url("../img/back.png") center center no-repeat;
+  background-size: 80% 80%;
+  vertical-align: middle;
+}
+.music-list-info .music-title {
+  font-size: 16px;
+  color: #ffffff;
+}
+.music-list-info .search {
+  float: right;
+  width: 35px;
+  height: 35px;
+  background: url("../img/search.png") center center no-repeat;
+  background-size: 60% 60%;
+  vertical-align: middle;
+}
+.music-list-info .list-more {
+  float: right;
+  width: 30px;
+  height: 35px;
+  clear: right;
+  text-align: center;
+  padding-top: 3%;
+}
+.music-list-info .list-more i {
+  display: block;
+  float: right;
+  clear: both;
+  width: 2px;
+  height: 2px;
+  border: 1px solid #FFFFFF;
+  background: #FFFFFF;
+  border-radius: 2px;
+  margin: 0px 15px 2px 0;
+}
+.music-list-info .scrollFixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 35px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.list-info-content {
+  height: 180px;
+}
+.list-info-content .list-detail {
+  display: flex;
+  width: 90%;
+  height: 120px;
+  padding: 0 0 0 5%;
+}
+.list-info-content .list-detail .name-detail {
+  flex: 1;
+}
+.list-info-content .list-detail .name-detail .imgBox {
+  width: 110px;
+  height: 110px;
+  background-size: 100% 100%;
+  overflow: hidden;
+}
+.list-info-content .list-detail .name-detail .imgBox .music-num {
+  width: 44%;
+  height: 18px;
+  float: right;
+  line-height: 18px;
+  font-size: 12px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.17);
+}
+.list-info-content .list-detail .name-detail .imgBox .music-num .music-num-icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 4px;
+  background: url(../../src/assets/Headset.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.list-info-content .list-detail .name-detail .imgBox .tips {
+  display: inline-block;
+  margin: 90px 0 0 4px;
+  width: 15px;
+  height: 15px;
+  background: url(../img/tips.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.list-info-content .list-detail .tit {
+  flex: 3;
+  padding: 10px 4px 0 6px;
+  font-size: 15px;
+  color: #ffffff;
+}
+.list-info-content .list-detail .tit h2 {
+  margin: 10px auto auto 10px;
+}
+.list-info-content .list-detail .tit .list-author {
+  margin-top: 20px;
+  font-size: 12px;
+}
+.list-info-content .list-detail .tit .list-author .user-pic {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  margin-right: 4px;
+  background-size: 100% 100%;
+  vertical-align: middle;
+}
+.list-info-content .list-detail .tit .list-author .go {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: url(../img/go.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
+}
+.music-list-info-cover {
+  position: absolute;
+  width: 100%;
+  height: 205px;
+  background-size: 100% 100%;
+  -webkit-filter: blur(50px);
+  -moz-filter: blur(50px);
+  -ms-filter: blur(50px);
+  filter: blur(50px);
+  z-index: 1;
+}

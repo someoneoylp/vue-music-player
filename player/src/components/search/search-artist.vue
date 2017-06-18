@@ -1,5 +1,5 @@
 <template>
-	<div class="artist-list">
+	<div class="search-artist search-list-same">
 		<p class="notFoundTips" v-if="notFound[0]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li class="list-item">
@@ -45,40 +45,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.artist-list{
-	width: 100%;
-	.notFoundTips{
-		line-height: 200px;
-    text-align: center;
-    font-size: 14px;
-	}
-	.list-item{
-		display:flex;
-		width: 100%;
-		height: 45px;
-		.music-title{
-			flex:6;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			border-bottom: 1px solid #E6E8E9;
-			.artist-img{
-				width: 50px;
-				height: 50px;
-				margin: 5px 10px;
-				float: left;
-			}
-			.artist-name{
-				font-size:13px;
-				float: left;
-				color:#000000;
-				width: 80%;
-				height: 60px;
-				line-height: 60px;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-		}
-	}	
+@import '../../../static/css/searchListSame.less';
+.search-artist .list-item .artist-name{
+	font-size:13px;
+	float: left;
+	color:#000000;
+	width: 75%;
+	height: 60px;
+	line-height: 60px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 </style>

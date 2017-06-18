@@ -1,5 +1,5 @@
 <template>
-	<div class="album-list">
+	<div class="search-album search-list-same">
 		<p class="notFoundTips" v-if="notFound[1]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li v-for="(album,index) in albums" class="list-item">
@@ -33,44 +33,6 @@ export default {
 	}
 }
 </script>
-<style lang="less" scoped>
-.album-list{
-	width: 100%;
-	.notFoundTips{
-		line-height: 200px;
-    text-align: center;
-    font-size: 14px;
-	}
-	.list-item{
-		display:flex;
-		width: 100%;
-		height: 45px;
-		.music-title{
-			flex:6;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			border-bottom: 1px solid #E6E8E9;
-			.artist-img{
-				width: 50px;
-				height: 50px;
-				margin: 5px 10px;
-				float: left;
-			}
-			.album-name{
-				float: left;
-				width: 80%;
-				margin-top: 10px;
-				font-size:13px;
-				color:#000000;
-			}
-			.album-singer{
-				float: left;
-				width: 80%;
-				font-size: 12px;
-    		color: #797979;
-			}
-		}
-	}	
-}
+<style lang="less">
+	@import '../../../static/css/searchListSame.less';
 </style>

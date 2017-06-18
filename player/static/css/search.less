@@ -1,0 +1,180 @@
+/*
+*搜索页
+*/
+.search{
+		width: 100%;
+		height: 100%;
+		/*搜索框*/
+		.search-bar{
+			height: 3.5rem;
+			background-color: #b72712;
+			.back{
+				display:inline-block;
+				width: 38px;
+				height: 38px;
+				margin-top: 12px;
+				background:url("../img/back.png") center center no-repeat;
+				background-size:80% 80%;
+				vertical-align:middle;
+			}
+			.search-part{
+				width: 84%;
+				height: 30px;
+				margin: 15px 10px auto auto;
+				float: right;
+				border-bottom: 1px solid rgba(255,255,255,.38);
+				input[name='search-words']{
+					width: 88%;
+					height: 100%;
+					outline: 0;
+					font-size: 1.1rem;
+					color: rgba(255,255,255,.38);
+					float: left;
+					background-color: #b72712;
+				}
+				input[name='search-words']::-webkit-input-placeholder { /* WebKit browsers */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']::-moz-placeholder { /* Mozilla Firefox 19+ */ 
+					color: rgba(255,255,255,.38); 
+				} 
+				input[name='search-words']:-ms-input-placeholder { /* Internet Explorer 10+ */ 
+					color: rgba(255,255,255,.38); 
+				}
+				.icon{
+					display:inline-block;
+					width: 30px;
+					height: 30px;
+					margin-top: -3px;
+					background:url("../img/close.png") center center no-repeat;
+					background-size:100%;
+				} 
+			}	
+		}
+		/* 搜索框输入关键词keyword后的下拉菜单 */
+		.search-result{
+			float: left;
+			position: absolute;
+			margin-left: 50%;
+    	transform: translateX(-50%);
+			z-index: 999;
+	    width: 90%;
+	    background-color: #fff;
+	    min-height: 100px;
+    	li{
+    		text-indent: 1rem;
+    		text-align: left;
+    		width: 100%;
+    		height: 40px;
+    		line-height: 40px;
+				border-bottom: 1px solid #ddd;
+				font-size: 1rem;
+				color: #797878;
+				position: relative;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				p{
+					color:#4558b9;
+				}
+				.icon{
+					position: absolute;
+					top: 10px;
+					left: 1rem;
+					width: 20px;
+					height: 20px;
+					background:url("../img/search2.png") center center no-repeat;
+					background-size:100%;
+				}
+				span{
+					float: right;
+					width: 88%;
+				}
+    	}
+		}
+		/* 搜索框未输入时 下方的推荐 */
+		.search-tips{
+			.search-type{
+				width: 100%;
+				height: 3rem;
+				line-height: 3rem;
+				text-align: center;
+				border-bottom: 1px solid #ddd;
+				p{
+					position: relative;
+					width: 150px;
+	    		margin: 0 auto;
+	    		font-size: 1rem;
+					i{
+						display: block;
+						position: absolute;
+						left: 0;
+						top: 10px;
+						width: 30px;
+						height: 30px;
+						background: url("../../src/assets/friends.png") center center no-repeat;
+					}	
+				}
+			}
+			.search-hot{
+				float: left;
+				h2{
+					font-size: 0.9rem;
+					color: #797979;
+					margin: 25px auto auto 10px;
+					overflow: hidden;
+				}
+				ul{
+					padding: 10px; 
+					margin-left: -10px;
+					margin-right: -10px;
+				}
+				li{
+					float: left;
+					margin: 5px;
+					padding: 5px 10px;
+					border-radius: 15px;
+					color: #797979;
+					border:1px solid #ddd;
+				}
+			}	
+		}
+		/* 选择关键词keyword后的结果tab页 */
+		.result-page{
+			position: absolute;
+			width: 100%;
+			.nav{
+				display:flex;
+				height: 35px;
+				background: #FCFDFD;
+				.song,.artist,.album,.playlist,.mv{
+					flex:1;
+					text-align: center;
+					line-height: 35px;
+					font-size: 14px;
+				}	
+				.isActive{
+					border-bottom: 2px solid #B72712;
+					color: #B72712;
+				}
+			}
+			.search-content-view{
+				width: 100%;
+				height: 100%;
+				.play-all{
+					display: none;
+				}	
+				.notFoundTips{
+					line-height: 200px;
+			    text-align: center;
+			    font-size: 14px;
+				}
+				.list-item{
+					height: 60px;
+					line-height: 20px;
+				}
+			}
+		}
+	}

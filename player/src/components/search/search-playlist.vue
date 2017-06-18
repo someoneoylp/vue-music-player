@@ -1,5 +1,5 @@
 <template>
-	<div class="playlist-list">
+	<div class="search-playlist search-list-same">
 		<p class="notFoundTips" v-if="notFound[2]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li v-for="(playlist,index) in playlists" class="list-item">
@@ -37,46 +37,25 @@ export default {
 	}
 }
 </script>
-<style lang="less" scoped>
-.playlist-list{
-	width: 100%;
-	.notFoundTips{
-		line-height: 200px;
-    text-align: center;
-    font-size: 14px;
+<style lang="less">
+@import '../../../static/css/searchListSame.less';
+.search-playlist .list-item .music-title{
+	.playlist-name{
+		float: left;
+		width: 75%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 5px;
+		font-size:13px;
+		color:#000000;
 	}
-	.list-item{
-		display:flex;
-		width: 100%;
-		height: 45px;
-		.music-title{
-			flex:6;
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			border-bottom: 1px solid #E6E8E9;
-			.artist-img{
-				width: 50px;
-				height: 50px;
-				margin: 5px 10px;
-				float: left;
-			}
-			.playlist-name{
-				float: left;
-				width: 80%;
-				margin-top: 10px;
-				font-size:13px;
-				color:#000000;
-			}
-			.playlist-singer{
-				float: left;
-				width: 80%;
-				font-size: 12px;
-    		color: #797979;
-    		span{
-    			margin-right: 5px;
-    		}
-			}
+	.playlist-singer{
+		float: left;
+		width: 75%;
+		font-size: 12px;
+		color: #797979;
+		span{
+			margin-right: 5px;
 		}
 	}	
 }

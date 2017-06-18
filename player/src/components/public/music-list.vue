@@ -10,10 +10,12 @@
 			<li v-for="(musicList,index) in musicLists" class="list-item">
 				<span class="serial-num" @click="playFoot(musicList.id,index)">{{index+1}}</span>
 				<span class="music-title" @click="playFoot(musicList.id,index)">
-					<p class="">
+					<p>
 						<span class="music-name">
 							{{musicList.name}} <span v-if="musicList.alias">- {{musicList.alias[0]}}</span>
 						</span>
+					</p>
+					<p>
 						<span v-if="musicList.artists" class="music-singer" v-for="artist in musicList.artists">
 							<i class="isDown" v-if="musicList.down"></i>
 							{{artist.name}} 

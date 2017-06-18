@@ -98,7 +98,7 @@ export default {
 			.content{
 				float: right;
 				width: 60%;
-				margin: 0.4rem 1rem 0.4rem auto;
+				margin: 0.3rem 0 0.4rem auto;
 				font-size: 0.8rem;
 				li{
 					overflow: hidden;

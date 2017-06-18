@@ -33,10 +33,25 @@ const state = {
 	second:0,//歌曲播放用时
 	changeSong:0,//是否改变当前播放歌曲，下一首-1，上一首1
 }
-
+const getters = {
+	scrollToBelow:state=>state.scrollToBelow
+}
 const mutations = {
 	change:(state,type) => {state.hidNav = type},
-	getRecoListId:(state,id) =>{state.recoListId = id,console.log(id)}
+	getRecoListId:(state,id) =>{state.recoListId = id,console.log(id)},
+	getScroll:()=>{
+		window.addEventListener('scroll',()=>{
+			this.scroll = document.body.scrollTop;
+				if(this.scroll>=30){
+				state.scrollToBelow = true;
+				console.log(state.scrollToBelow);
+			}else{
+				state.scrollToBelow = false;
+			}	
+		})
+		
+	},
+
 }
 const actions = {
 	changeAsync ({commit},type){
@@ -47,6 +62,7 @@ const actions = {
 }
 export default new Vuex.Store({
   state : state,
+  getters: getters,
   mutations:mutations,
   actions:actions
 })

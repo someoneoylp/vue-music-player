@@ -30,7 +30,7 @@ import api from '../../api'
 import axios from 'axios'
 import contentOp from "../public/content-operation.vue"
 import musicList from "../public/music-list.vue"
-import {mapState} from "vuex"
+import {mapState,mapMutations} from "vuex"
 export default{
 	data(){
 		return{
@@ -68,21 +68,16 @@ export default{
 		}
 	},
 	mounted:function(){
-		window.addEventListener('scroll',this.getScroll);
 		this.getTopListResource();
+		this.$store.commit('getScroll');
 	},
 	methods:{
+		...mapMutations([
+			'getScroll'
+		]),
 		init:function(){
 			this.$store.state.hidNav = true;
 			this.$router.go(-1);
-		},
-		getScroll:function(){
-			this.scroll = document.body.scrollTop
-			if(this.scroll>=30){
-				this.$store.state.scrollToBelow = true
-			}else{
-				this.$store.state.scrollToBelow = false
-			}	
 		},
 		getTopListResource: function(){
 			api.getTopListResource(this.id).then((response)=>{
