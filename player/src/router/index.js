@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import music from '@/components/music/music.vue'
-import list from '@/components/list/list.vue'
-import friends from '@/components/friends/friends.vue'
-import recommend from "@/components/music/recommend.vue"
-import rankingList from "@/components/music/ranking-list.vue"
-import musicList from "@/components/music/music-list-components.vue"
-import rankingEachPage from "@/components/music/ranking-each-page.vue"
-import playMusic from "@/components/public/play-music.vue"
-import search from "@/components/search/search.vue"
-import searchContentView from "@/components/search/search-content-view.vue"
-import searchArtist from "@/components/search/search-artist.vue"
-import searchAlbumPage from "@/components/search/search-album-page.vue"
+const music = resolve => require(['@/components/music/music.vue'], resolve);
+const list = resolve => require(['@/components/list/list.vue'], resolve); 
+const friends = resolve => require(['@/components/friends/friends.vue'], resolve); 
+const recommend = resolve => require(["@/components/music/recommend.vue"], resolve); 
+const rankingList = resolve => require(["@/components/music/ranking-list.vue"], resolve); 
+const musicList = resolve => require(["@/components/music/music-list-components.vue"], resolve); 
+const rankingEachPage = resolve => require(["@/components/music/ranking-each-page.vue"], resolve); 
+const playMusic = resolve => require(["@/components/public/play-music.vue"], resolve); 
+const search = resolve => require(["@/components/search/search.vue"], resolve); 
+const searchContentView = resolve => require(["@/components/search/search-content-view.vue"], resolve); 
+const searchArtist = resolve => require(["@/components/search/search-artist.vue"], resolve); 
+const searchAlbumPage = resolve => require(["@/components/search/search-album-page.vue"], resolve); 
 Vue.use(Router)
 
 export default new Router({

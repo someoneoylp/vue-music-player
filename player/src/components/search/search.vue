@@ -53,7 +53,6 @@ export default{
 			keyword:'',
 			result: '',
 			hotSearch: ['安河桥', '追光者', '2U', '随便你', '我爱你', '王菲', '周杰伦', '你就不要想起我'],
-			showResultPage: false,
 			searchIsActive: true,
 			searchIsDefault: false,
 			tabNav: [
@@ -73,7 +72,8 @@ export default{
 			hidNav:state=>state.hidNav,
 			transitionName2: state=>state.transitionName2,
 			searchKeyWord: state=>state.searchKeyWord,
-			notFound: state=>state.notFound
+			notFound: state=>state.notFound,
+			showResultPage: state=>state.showResultPage
 		})
 	},
 	watch:{
@@ -82,6 +82,7 @@ export default{
 	methods:{
 		init(){
 			this.$store.state.hidNav = true;
+			this.$store.state.showResultPage = false;
 		},
 		//监听input的搜索函数
 		search(){
@@ -96,7 +97,7 @@ export default{
 				console.log('enter');
 				this.$store.state.searchKeyWord = input.value;
 				this.searchAll();
-				this.showResultPage = true;
+				this.$store.state.showResultPage = true;
 				this.endSearch();
 			}
 		},
@@ -105,7 +106,7 @@ export default{
 		},
 		//搜索的下拉菜单
 		chooseResult(){
-			this.showResultPage = true;
+			this.$store.state.showResultPage = true;
 			this.$store.state.searchKeyWord = event.target.parentNode.getElementsByTagName('span')[0].innerHTML;
 			console.log('key'+this.$store.state.searchKeyWord);
 			this.endSearch();
@@ -117,7 +118,7 @@ export default{
 			});
 		},
 		hotSearchResult(){
-			this.showResultPage = true;
+			this.$store.state.showResultPage = true;
 			this.$store.state.searchKeyWord = event.target.innerHTML;
 		},
 		searchAll(){
@@ -161,7 +162,6 @@ export default{
 				console.log('歌单'+this.searchKeyWord);
 				console.log(response.data.result.playlists);
 			});
-			
 		}
 	}	
 } 

@@ -15,6 +15,9 @@ import searchAlbum from './search-album.vue'
 import searchPlaylist from './search-playlist.vue'
 export default{
 	name: 'searchContentView',
+	mounted(){
+		this.$store.state.showResultPage = true;
+	},
 	data(){
 		return{
 			id: this.$route.params.id

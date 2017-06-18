@@ -35,6 +35,7 @@ const state = {
 	albums:[],//search albums数据
 	playlists:[],//search playlists数据
 	notFound:[false,false,false],//search数据是否找到（初始false值：api请求找到数据）
+	showResultPage: false,//search searchResult结果页是否显示（初始值false：隐藏）
 	currentMusic:'',//当前播放歌曲的id
 	currentindex:0,//当前播放歌曲在歌单中的排序位置位置
 	playing:false,//是否要播放
