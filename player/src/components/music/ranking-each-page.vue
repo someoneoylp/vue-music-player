@@ -20,9 +20,9 @@
 					<li>最近更新<span>{{date}}</span></li>
 				</ul>
 			</div>
-			<contentOp></contentOp>
+			<contentOp :subscribedCount='subscribedCount' :commentCount='commentCount' :shareCount='shareCount'></contentOp>
 		</div>
-		<musicList></musicList>
+		<musicList :trackCount='trackCount'></musicList>
 	</div>	
 </template>
 <script>
@@ -36,7 +36,12 @@ export default{
 		return{
 			id:this.$route.params.id,
 			coverImgUrl:'',
-			date:''
+			date:'',
+			rankingListName:'',//歌单名字
+			subscribedCount:0,//订阅数目
+			commentCount:0, //评论数目
+			shareCount:0, //分享数目
+			trackCount:0 //歌单内歌曲数目
 		}
 	},
 	components:{
@@ -46,17 +51,13 @@ export default{
 	computed:{
 		...mapState({
 			hidNav:state=>state.hidNav,
-			scrollToBelow:state=>state.scrollToBelow,
-			subscribedCount:state=>state.subscribedCount,
-			commentCount:state=>state.commentCount,
-			shareCount:state=>state.shareCount,
-			name: state=>state.rankingListName
+			scrollToBelow:state=>state.scrollToBelow
 		}),
 		hidNav(){
 			return this.$route.params.hidNav;
 		},
 		name(){
-			var name = this.$store.state.rankingListName;
+			var name = this.rankingListName;
 			if(name.slice(0,3)=="云音乐"){
 				return name.slice(3);
 			}else if(name.slice(0,2)=="网易"){
@@ -85,13 +86,14 @@ export default{
 		},
 		getTopListResource: function(){
 			api.getTopListResource(this.id).then((response)=>{
-				this.$store.state.subscribedCount= response.data.result.subscribedCount;
-				this.$store.state.commentCount = response.data.result.commentCount;
-				this.$store.state.shareCount = response.data.result.shareCount;
+				//复用的组件的数据
 				this.$store.state.musicLists = response.data.result.tracks;
-				this.$store.state.trackCount = response.data.result.trackCount;
-				this.$store.state.rankingListName = response.data.result.name;
-				
+				this.subscribedCount= response.data.result.subscribedCount;
+				this.commentCount = response.data.result.commentCount;
+				this.shareCount = response.data.result.shareCount;
+				this.trackCount = response.data.result.trackCount;
+				//其他非组件的数据
+				this.rankingListName = response.data.result.name;
 				this.coverImgUrl = response.data.result.coverImgUrl;
 				var date = new Date();
 				this.date = date.getMonth() +'月'+date.getDay()+'日';

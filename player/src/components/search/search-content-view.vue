@@ -18,11 +18,6 @@ export default{
 	mounted(){
 		this.$store.state.showResultPage = true;
 	},
-	data(){
-		return{
-			id: this.$route.params.id
-		}
-	},
 	components:{
 		musicList,
 		searchArtist,

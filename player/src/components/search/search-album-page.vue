@@ -27,13 +27,13 @@
 						</div>
 					</div>
 					<div class="list-operation">
-						<contentOp></contentOp>
+						<contentOp :subscribedCount='subscribedCount' :commentCount='commentCount' :shareCount='shareCount'></contentOp>
 					</div>
 				</div>
 			</div>
 			
 			<div class="list-content">
-				 <musicList></musicList> 
+				 <musicList :trackCount='trackCount'></musicList> 
 			</div>
 		</div>
 	</transition>
@@ -52,11 +52,13 @@ export default {
 	data(){
 		return {
 			id:this.$route.params.id,
-			commentCount : 0,
-			shareCount: 0,
 			name :'',
 			nickname :'',
-			coverImgUrl :''
+			coverImgUrl :'',
+			subscribedCount:0,//订阅数目
+			commentCount:0, //评论数目
+			shareCount:0, //分享数目
+			trackCount:0 //歌单内歌曲数目
 		}
 	},
 	components:{
@@ -66,12 +68,7 @@ export default {
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			avatarUrl:state=>state.avatarUrl,
-			musicLists: state=>state.musicLists,
-			subscribedCount:state=>state.subscribedCount,
-			commentCount:state=>state.commentCount,
-			shareCount:state=>state.shareCount,
-			trackCount: state => state.trackCount
+			avatarUrl:state=>state.avatarUrl
 		})
 	},
  	mounted:function () {
@@ -84,14 +81,15 @@ export default {
 			this.$store.state.hidNav = true;
 		},
 		getPlayList(){
-			api.getSearchAlbumResource(this.id)
-			.then((response)=>{
+			api.getSearchAlbumResource(this.id).then((response)=>{
 				console.log(response.data);
+				//复用的组件的数据
 				this.$store.state.musicLists = response.data.songs;
 				//this.$store.state.subscribedCount = response.data.album.info.subscribedCount;
-				this.$store.state.commentCount = response.data.album.info.commentCount;
-				this.$store.state.shareCount = response.data.album.info.shareCount;
-				this.$store.state.trackCount = response.data.album.size;
+				this.commentCount = response.data.album.info.commentCount;
+				this.shareCount = response.data.album.info.shareCount;
+				this.trackCount = response.data.album.size;
+				//其他非组件的数据
 				this.name = response.data.album.name;
 				this.nickname = response.data.album.artist.name;
 				this.coverImgUrl = response.data.album.picUrl;

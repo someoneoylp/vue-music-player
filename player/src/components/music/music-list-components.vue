@@ -31,13 +31,13 @@
 						</div>
 					</div>
 					<div class="list-operation">
-						<contentOp></contentOp>
+						<contentOp :subscribedCount='subscribedCount' :commentCount='commentCount' :shareCount='shareCount'></contentOp>
 					</div>
 				</div>
 			</div>
 			
 			<div class="list-content">
-				 <musicList></musicList> 
+				 <musicList :trackCount='trackCount'></musicList> 
 			</div>
 		</div>
 	</transition>
@@ -56,12 +56,16 @@ export default {
 	data(){
 		return {
 			id:this.$route.params.id,
-			nickname : '',
-			name : '',
-			coverImgUrl : '',
-			avatarUrl : '',
-			playCount : 0,
-			scrollToBelow:false
+			nickname : '',//歌单创建者名称
+			name : '',//歌单名称
+			coverImgUrl : '',//背景图片
+			avatarUrl : '',//歌单创建者头像
+			playCount : 0,//播放量
+			scrollToBelow:false,
+			subscribedCount:0,//订阅数目
+			commentCount:0, //评论数目
+			shareCount:0, //分享数目
+			trackCount:0 //歌单内歌曲数目
 		}
 	},
 	components:{
@@ -71,12 +75,7 @@ export default {
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			recoListId: state => state.recoListId,
-			musicLists:state=>state.musicLists,
-			subscribedCount:state=>state.subscribedCount,
-			commentCount:state=>state.commentCount,
-			shareCount:state=>state.shareCount,
-			trackCount: state => state.trackCount
+			recoListId: state => state.recoListId
 		})
 	},
  	mounted:function () {
@@ -97,14 +96,13 @@ export default {
 			}	
 		},
 		getPlayList(){
-			api.getPlayListDeatil(this.id)
-			.then((response)=>{
+			api.getPlayListDeatil(this.id).then((response)=>{
 				//复用的组件的数据
 				this.$store.state.musicLists = response.data.result.tracks;
-				this.$store.state.subscribedCount = response.data.result.subscribedCount;
-				this.$store.state.commentCount = response.data.result.commentCount;
-				this.$store.state.shareCount = response.data.result.shareCount;
-				this.$store.state.trackCount = response.data.result.tracks.length;
+				this.subscribedCount = response.data.result.subscribedCount;
+				this.commentCount = response.data.result.commentCount;
+				this.shareCount = response.data.result.shareCount;
+				this.trackCount = response.data.result.tracks.length;
 				//其他非组件的数据
 				this.nickname = response.data.result.creator.nickname;
 				this.name = response.data.result.name;

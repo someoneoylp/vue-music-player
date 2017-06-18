@@ -32,13 +32,15 @@
 </template>
 
 <script>
-import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
+import {mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import {change} from "../../store/index.js"
 export default {
+	props:[
+		'trackCount'//歌单内歌曲数目
+	],
 	computed:{
 		...mapState({
-			musicLists: state => state.musicLists,
-			trackCount: state => state.trackCount
+			musicLists:state=>state.musicLists
 		})
 	},
 	methods:{
