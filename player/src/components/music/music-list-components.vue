@@ -74,9 +74,8 @@ export default {
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			recoListId: state => state.recoListId,
 			scrollToBelow:state=>state.scrollToBelow
-		})
+		})/*recoListId: state => state.recoListId,*/
 	},
  	mounted:function () {
 		this.getPlayList();

@@ -19,7 +19,8 @@
 					</div>
 				</div>
 				<div class="lyric" v-show="isShowLyric" @click="showLyric()">
-					<div id="volume" class="volume" @touchmove="rangeTM($event,'volume')" @touchstart="barTS($event,'volume')" style="margin-left:16%">
+					<div id="volume" class="volume" @touchmove="rangeTM($event,'volume')" @touchstart="barTS($event,'volume')" style="margin-left:19%">
+						<i class="volume-icon"></i>
 				        <div id="volume-progress" class="volume-progress"></div>
 				        <span id="volume-bar" class="volume-bar" @touchstart="barTS($event,'volume')"></span>
 					</div>

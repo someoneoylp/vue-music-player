@@ -7,20 +7,18 @@ vue.use(Vuex)
 const state = {
 	hidNav: true,//一级菜单nav是否显示（初始值true：显示）
 	hidFoot:false,//foot是否显示，fasle:隐藏，true:显示
+	hidSidebar:false,//是否隐藏sidebar,false隐藏
 	transitionName: '',//一级菜单nav切换动画
 	transitionName2: '',//二级music菜单 nav切换动画
 	musicNavIsActive: 1,//音乐列表和排行表nav切换（初始值1：音乐列表nav是active状态）
 	scrollToBelow: false,//歌曲列表页面下滑时顶端是否出现搜索条（初始值false：隐藏搜索条）
-	hidSidebar:false,
-	recoListId:'',
+	//recoListId:'',
 	persRecoLists:[],//个性推荐歌单
-	recoMvLists:[],//推荐mv
-	stationLists:[],//主播电台
 	musicLists:[], //歌单
 	searchKeyWord:'',//search的关键词
 	typeId:0,//search的类型（单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002) *(type)*）
 	songListID:'',//歌单id
-	index:0,
+	//index:0,
 	artist:[],//search artists数据
 	albums:[],//search albums数据
 	playlists:[],//search playlists数据
@@ -32,19 +30,29 @@ const state = {
 	playTime:'0:00',//播放时间
 	second:0,//歌曲播放用时
 	changeSong:0,//是否改变当前播放歌曲，下一首-1，上一首1
+	playCount:0//播放次数
 }
 const getters = {
-	scrollToBelow:state=>state.scrollToBelow
+	scrollToBelow:state=>state.scrollToBelow,
+	playCount:state=>state.playCount
 }
 const mutations = {
 	change:(state,type) => {state.hidNav = type},
-	getRecoListId:(state,id) =>{state.recoListId = id,console.log(id)},
+	getRecoListId:(state,id) =>{state.recoListId = id},
+	/*setPlayCount(state,dataResultLen,thisPlayCount)=> {
+		for(let i=0;i<dataResultLen;i++){
+			let playCount = thisPlayCount[i].playCount
+			if(playCount>9999){
+				thisPlayCount[i].playCount = thisPlayCount[i].playCount.toString().slice(0,2)+'万'
+			} 
+		}
+
+	},*/
 	getScroll:()=>{
 		window.addEventListener('scroll',()=>{
 			this.scroll = document.body.scrollTop;
 				if(this.scroll>=30){
 				state.scrollToBelow = true;
-				console.log(state.scrollToBelow);
 			}else{
 				state.scrollToBelow = false;
 			}	

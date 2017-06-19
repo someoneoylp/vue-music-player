@@ -88,10 +88,10 @@
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import {change} from "../../store/index.js"
 import api from '../../api/index'
-var musicLists = [];
 var soleLists =[];
 var newestLists = [];
 var recoMvLists =[];
+var stationLists=[];
 /*屏幕宽度*/
 var winWidth = screen.width
 export default {
@@ -105,16 +105,15 @@ export default {
              i:0,
              soleLists : soleLists,
              newestLists:newestLists,
+             recoMvLists:recoMvLists,
+             stationLists:stationLists
 		}
 	},
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
-			recoListId:state=>state.recoListId,
 			persRecoLists:state=>state.persRecoLists,
-			recoMvLists:state=>state.recoMvLists,
-			stationLists:state=>state.stationLists
-		})
+		})/*recoListId:state=>state.recoListId,*/
 	},
 	mounted:function(){
 		this.$store.state.musicNavIsActive = 1;
@@ -127,6 +126,14 @@ export default {
 	       }
 	     },2000)
 	    this.getData()
+    },
+    watch:{
+    	/*n(curVal,oldVal){
+    		console.log(curVal+":curVal"+-this.pic.length)
+    		if(curVal-1==-this.pic.length){
+				this.n=0
+    		}
+		}*/
     },
     methods:{
     	change:function(index){
@@ -155,18 +162,19 @@ export default {
 			api.getBroadcastingStation()
 			.then((response)=>{
 				let dataResult = response.data.result
-				this.$store.state.stationLists = dataResult;
+				this.stationLists = dataResult;
 			}),
 			api.getPersonalizedMv()
 			.then((response)=>{
 				let dataResult = response.data.result
-				this.$store.state.recoMvLists = dataResult;
+				this.recoMvLists = dataResult;
 				for(let i=0;i<dataResult.length;i++){
-					let playCount = this.$store.state.recoMvLists[i].playCount
+					let playCount = this.recoMvLists[i].playCount
 					if(playCount>9999){
-						this.$store.state.recoMvLists[i].playCount = this.$store.state.recoMvLists[i].playCount.toString().slice(0,2)+'万'
+						this.recoMvLists[i].playCount = this.recoMvLists[i].playCount.toString().slice(0,2)+'万'
 					} 
 				}
+
 			})
 		}
 		
