@@ -1,0 +1,148 @@
+/*
+*个性推荐界面样式
+*/
+.music-content{
+	width: 100% !important;
+	&:after{
+			content:'';
+			clear:both;
+			display:block;
+		}
+	/* 轮播图部分*/
+	.carousel-figure{
+		overflow: hidden;
+		width: 100%;
+		height: 9rem;
+		background: pink;
+		background-size:100% 100%;
+		.pic-ul{
+			height: 9rem;
+			position: relative;
+			transition: all .4s;
+			.pic-list{
+				height: 9rem;
+				float: left;
+				transition: all .4s;
+					.pic-item{
+					width: 31.8rem;
+					height: 9rem;
+				}
+			}
+		}
+		.carousel-items{
+			height: 1rem;
+			color: #ffffff;
+			position: absolute;
+			right: 0;
+			margin-top: -2rem;
+			span{
+				width: 0.5rem;
+				height: 0.5rem;
+				display: inline-block;
+				border:1px solid #ffffff;
+				border-radius: 0.5rem;
+				margin: 0.5rem 0.3rem 0.5rem 0.3rem;
+				transition: all .5s;
+			}
+			.carousel-active{
+				background:#ffffff;
+			}
+		}
+	}
+	.recommend-playlist{
+		margin:2rem 0 0 0;
+		&:after{
+			content:'';
+			clear:both;
+			display:block;
+		}
+		.music-list-item-sole{
+			width:46%;
+			margin: 2%;
+			float: left;
+			height: 10rem;
+			background-size:100% 100%;
+			}
+		.recommend-title{
+			font-size:1.2rem;
+			i{
+				display:inline-block;
+				vertical-align: middle;
+				width:1.6rem;
+				height:1.6rem;
+				margin:-0.2rem 0.5rem 0 0.8rem;
+			}
+			.recommend-icon{
+				background:url(../img/reco.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.sole-icon{
+				background:url(../img/sole.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.news-icon{
+				background:url(../img/news2.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.station-icon{
+				background:url(../img/station.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+			.mv-icon{
+				background:url(../img/MV-re.png) left center no-repeat;
+					background-size:100% 100%;
+			}
+		}
+	}
+	/* 推荐音乐列表部分 */
+	.music-list-item{
+		width:29%;
+		margin: 2%;
+		float: left;
+		height: 10rem;
+		background-size:100% 100%;
+	}
+}
+.music-content{
+	.imgWrap{
+			display: block !important;
+			width: 100%;
+			height: 8rem;
+			background-size: 100% 100%;
+			overflow:hidden;
+			.music-num{
+				width: 53%;
+				height: 1.6rem;
+				float: right;
+				line-height: 1.6rem;
+				font-size: 0.8rem;
+				color: #ffffff;
+				background:rgba(0, 0, 0, 0.17);
+				.music-num-icon{
+					display: inline-block;
+					width: 0.9rem;
+					height: 0.9rem;
+					margin: 0 0.2rem;
+					vertical-align: middle;
+					background:url(../../src/assets/Headset.png) left center no-repeat;
+					background-size:100% 100%;
+				}
+			}
+		}
+.music-des{
+			font-family: "sans-serif";
+			margin: 0.4rem 0 0 0.2rem;
+		    font-size: 0.8rem;
+		    width: 100%;
+    		height: 1.9rem;
+		    line-height: 0.9rem;
+		    overflow: hidden;
+		    text-overflow : ellipsis;
+		}
+.sole-bottom{
+	width:96% !important;
+}
+.recoMv{
+	width:45% !important;
+}
+}

@@ -1,5 +1,5 @@
 <template>
-	<div>list</div>
+	<div>尚未开发</div>
 </template>
 
 <script>

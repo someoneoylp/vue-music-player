@@ -71,7 +71,7 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 50px;
+  height: 3.6rem;
   background: rgba(255, 255, 255, 0.90);
 }
 </style>

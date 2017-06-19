@@ -134,33 +134,33 @@ export default {
 	color:#000000;
 	.music-info{
 		flex:4;
-		height:50px;
+		height:3.6rem;
 		a{
 			color:#000000;
 			.flag{
 				float:left;
-				width:34px;
-				height:34px;
-				margin:8px;
-				border-radius:4px;
+				width:2.8rem;
+				height:2.8rem;
+				margin:0.4rem;
+				border-radius:0.3rem;
 				display:inline-block;
 				background-size:100% 100%;
 			}
 			.info{
 				display:inline-block;
-				margin-top:10px;
+				margin-top:0.8rem;
 				width: 62%;
 				span{
 					display:block;
 					width:100%;
-					height:14px;
+					height:1.0rem;
 					overflow:hidden;
 					&:first-child{
-						font-size:14px;
+						font-size:1.0rem;
 					}
 					&:last-child{
-						font-size:12px;
-						margin-top:4px;
+						font-size:0.8rem;
+						margin-top:0.3rem;
 					}
 				}
 			}
@@ -169,7 +169,7 @@ export default {
 	}
 	.musicOper{
 		flex:2;
-		height:50px;
+		height:3.6rem;
 		display:flex;
 		span{
 			flex:1;

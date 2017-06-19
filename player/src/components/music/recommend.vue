@@ -97,7 +97,7 @@ var winWidth = screen.width
 export default {
 	data(){
 		return {
-			 pic:["../../../static/img/16.jpg","../../../static/img/6.jpg","../../../static/img/1.jpg","../../../static/img/16.jpg"],
+			 pic:["../../../static/img/16.jpg","../../../static/img/6.jpg","../../../static/img/1.jpg","../../../static/img/16.jpg"],//轮播图图片
              now:"./images/1.jpg",
              winWidth : winWidth,
              n:0,
@@ -115,9 +115,6 @@ export default {
 			recoMvLists:state=>state.recoMvLists,
 			stationLists:state=>state.stationLists
 		})
-	},
-	beforeMount:function(){
-		
 	},
 	mounted:function(){
 		this.$store.state.musicNavIsActive = 1;
@@ -180,165 +177,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.music-content{
-	width: 100% !important;
-	&:after{
-			content:'';
-			clear:both;
-			display:block;
-		}
-	/* 轮播图部分*/
-	.carousel-figure{
-		overflow: hidden;
-		width: 100%;
-		height: 90px;
-		background: pink;
-		background-size:100% 100%;
-		.pic-ul{
-			height: 90px;
-			position: relative;
-			transition: all .4s;
-			.pic-list{
-				height: 90px;
-				float: left;
-				transition: all .4s;
-					.pic-item{
-					width: 318px;
-					height: 90px;
-				}
-			}
-		}
-		.carousel-items{
-			height: 20px;
-			color: #ffffff;
-			position: absolute;
-			right: 0;
-			margin-top: -20px;
-			span{
-				width: 6px;
-				height: 6px;
-				display: inline-block;
-				border:1px solid #ffffff;
-				border-radius: 8px;
-				margin:6px 3px 6px 3px;
-				transition: all .5s;
-			}
-			.carousel-active{
-				background:#ffffff;
-			}
-		}
-	}
-	.recommend-playlist{
-		margin:20px 0 0 0;
-		&:after{
-			content:'';
-			clear:both;
-			display:block;
-		}
-		.music-list-item-sole{
-			width:46%;
-			margin: 2%;
-			float: left;
-			height: 140px;
-			background-size:100% 100%;
-			}
-		.recommend-title{
-			font-size:16px;
-			i{
-				display:inline-block;
-				vertical-align: middle;
-				width:16px;
-				height:16px;
-				margin:-2px 5px 0 8px;
-			}
-			.recommend-icon{
-				background:url(../../../static/img/reco.png) left center no-repeat;
-					background-size:100% 100%;
-			}
-			.sole-icon{
-				background:url(../../../static/img/sole.png) left center no-repeat;
-					background-size:100% 100%;
-			}
-			.news-icon{
-				background:url(../../../static/img/news2.png) left center no-repeat;
-					background-size:100% 100%;
-			}
-			.station-icon{
-				background:url(../../../static/img/station.png) left center no-repeat;
-					background-size:100% 100%;
-			}
-			.mv-icon{
-				background:url(../../../static/img/MV-re.png) left center no-repeat;
-					background-size:100% 100%;
-			}
-		}
-	}
-	/* 推荐音乐列表部分 */
-	.music-list-item{
-		width:29%;
-		margin: 2%;
-		float: left;
-		height: 140px;
-		background-size:100% 100%;
-		
-		
-	}
-}
-.imgWrap{
-			display: block !important;
-			width: 100%;
-			height: 100px;
-			background-size: 100% 100%;
-			overflow:hidden;
-			.music-num{
-				width: 53%;
-				height: 18px;
-				float: right;
-				line-height: 18px;
-				font-size: 12px;
-				color: #ffffff;
-				background:rgba(0, 0, 0, 0.17);
-				.music-num-icon{
-					display: inline-block;
-					width: 10px;
-					height: 10px;
-					margin: 0 4px;
-					background:url(../../assets/Headset.png) left center no-repeat;
-					background-size:100% 100%;
-				}
-			}
-			.music-user{
-				width: 100%;
-				height: 15px;
-				margin:83px 0 0 0px;
-				color: #ffffff;
-				font-size: 12px;
-				.music-user-icon{
-					display: inline-block;
-					width: 10px;
-					height: 10px;
-					margin: 0 2px;
-					background:url(../../assets/user.png) left center no-repeat;
-					background-size:100% 100%;
-				}
-			}
-		}
-.music-des{
-			font-size: 12px;
-			font-family: "sans-serif";
-			margin: 4px 0 0 2px;
-		    font-size: 12px;
-		    width: 100%;
-    		height: 33px;
-		    line-height: 16px;
-		    overflow: hidden;
-		    text-overflow : ellipsis;
-		}
-.sole-bottom{
-	width:96% !important;
-}
-.recoMv{
-	width:45% !important;
-}
-
+@import '../../../static/css/recommend.less';
 </style>
