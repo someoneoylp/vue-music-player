@@ -103,20 +103,37 @@
   height: 10rem;
   background-size: 100% 100%;
 }
-.music-content .imgWrapContainer {
+.music-content .imgWrapContainer,
+.music-content .imgWrap {
   width: 100%;
 }
-.music-content .imgWrapContainer .imgWrap {
+.music-content .imgWrapContainer .imgWrap2,
+.music-content .imgWrap .imgWrap2 {
+  position: relative;
   overflow: hidden;
   display: block !important;
   background-size: 100% 100%;
 }
-.music-content .imgWrapContainer .imgWrap::after {
+.music-content .imgWrapContainer .imgWrap2::after,
+.music-content .imgWrap .imgWrap2::after {
   content: '';
   margin-top: 100%;
   display: block;
 }
-.music-content .imgWrapContainer .music-num {
+.music-content .imgWrapContainer .music-user,
+.music-content .imgWrap .music-user {
+  position: absolute;
+  width: 100%;
+  height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  bottom: 0;
+  left: 5px;
+  color: #ffffff;
+  font-size: 12px;
+}
+.music-content .imgWrapContainer .music-num,
+.music-content .imgWrap .music-num {
   width: 58%;
   height: 1.6rem;
   float: right;
@@ -125,7 +142,8 @@
   color: #ffffff;
   background: rgba(0, 0, 0, 0.17);
 }
-.music-content .imgWrapContainer .music-num .music-num-icon {
+.music-content .imgWrapContainer .music-num .music-num-icon,
+.music-content .imgWrap .music-num .music-num-icon {
   display: inline-block;
   width: 0.9rem;
   height: 0.9rem;
@@ -134,12 +152,29 @@
   background: url(../../src/assets/Headset.png) left center no-repeat;
   background-size: 100% 100%;
 }
+.music-content .imgWrap {
+  width: 100%;
+  height: 8rem;
+  background-size: 100% 100%;
+  overflow: hidden;
+  display: block !important;
+}
+.music-content .imgWrap .music-user {
+  width: 100%;
+  height: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  bottom: 0;
+  left: 5px;
+  color: #ffffff;
+  font-size: 12px;
+}
 .music-content .music-des {
   font-family: "sans-serif";
   margin: 0.4rem 0 0 0.2rem;
   font-size: 0.8rem;
   width: 100%;
-  height: 1.9rem;
+  height: 1.7rem;
   line-height: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;

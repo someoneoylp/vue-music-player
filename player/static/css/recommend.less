@@ -104,17 +104,29 @@
 	}
 }
 .music-content{
-	.imgWrapContainer{
+	.imgWrapContainer,.imgWrap{
 			width: 100%;
-			.imgWrap{
+			.imgWrap2{
+				position: relative;
 				overflow: hidden;
 				display: block !important;
 				background-size: 100% 100%;
 			}
-			.imgWrap::after{
+			.imgWrap2::after{
 				content:'';
 				margin-top: 100%;
 				display: block;
+			}
+			.music-user {
+				position: absolute;
+		    width: 100%;
+		    height: 15px;
+		    overflow: hidden;
+	    	text-overflow:ellipsis;
+				bottom: 0;
+				left: 5px;
+		    color: #ffffff;
+		    font-size: 12px;
 			}
 			.music-num{
 				width: 58%;
@@ -135,12 +147,29 @@
 				}
 			}
 		}
+	.imgWrap{
+		width: 100%;
+		height: 8rem;
+		background-size: 100% 100%;
+		overflow:hidden;
+		display: block !important;
+		.music-user {
+	    width: 100%;
+	    height: 15px;
+	    overflow: hidden;
+	    text-overflow:ellipsis;
+	    bottom: 0;
+			left: 5px;
+	    color: #ffffff;
+	    font-size: 12px;
+		}
+	}	
 .music-des{
 			font-family: "sans-serif";
 			margin: 0.4rem 0 0 0.2rem;
 		    font-size: 0.8rem;
 		    width: 100%;
-    		height: 1.9rem;
+    		height: 1.7rem;
 		    line-height: 0.9rem;
 		    overflow: hidden;
 		    text-overflow : ellipsis;
