@@ -51,7 +51,7 @@ import api from '../../api/index'
 export default {
 	data(){
 		return {
-			id:this.$route.params.id,
+			id:this.$route.params.id || this.$store.state.songListID,
 			name :'',
 			nickname :'',
 			coverImgUrl :'',
@@ -87,7 +87,6 @@ export default {
 		},
 		getPlayList(){
 			api.getSearchAlbumResource(this.id).then((response)=>{
-				console.log(response.data);
 				//复用的组件的数据
 				this.$store.state.musicLists = response.data.songs;
 				//this.$store.state.subscribedCount = response.data.album.info.subscribedCount;

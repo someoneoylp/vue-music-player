@@ -1,9 +1,9 @@
 <template>
-	<div class="play-music" :style="{height:screenHeight+'px'}">
-		<div class="play-music-cover" :style="{height:screenHeight+'px',backgroundImage:'url(' + blurPicUrl + ')'}"></div>
+	<div class="play-music">
+		<div class="play-music-cover" :style="{backgroundImage:'url(' + blurPicUrl + ')'}"></div>
 		<div class="play-music-wrap">
 			<div class="play-music-header">
-				<router-link @click.native="back()" :to="{name:'musicList',params:{id:songListID}}" class="back"></router-link>
+				<a @click="back()" class="back"></a>
 				<p class="music-info">
 					<span>{{songName}}</span>
 					<span>{{songArtistsName}}</span>
@@ -19,8 +19,7 @@
 					</div>
 				</div>
 				<div class="lyric" v-show="isShowLyric" @click="showLyric()">
-					<div id="volume" class="volume" @touchmove="rangeTM($event,'volume')" @touchstart="barTS($event,'volume')" style="margin-left:19%">
-						<i class="volume-icon"></i>
+					<div id="volume" class="volume" @touchmove="rangeTM($event,'volume')" @touchstart="barTS($event,'volume')" style="margin-left:16%">
 				        <div id="volume-progress" class="volume-progress"></div>
 				        <span id="volume-bar" class="volume-bar" @touchstart="barTS($event,'volume')"></span>
 					</div>
@@ -87,14 +86,12 @@
 import { mapState, mapActions,mapGetters,mapMutations} from 'vuex'
 import api from '../../api/index'
 import {change} from "../../store/index.js"
-const screenHeight = screen.height 
 export default {
 	data(){
 		return {
 			lyricA:false,//是否显示歌词
 			likeActive:false,
 			isShowLyric:false,
-			screenHeight:screenHeight,
 			songDetail:[],
 			allTime:'',//播放时间
 			playTimeCurrent:'0:00',
@@ -104,9 +101,9 @@ export default {
 			blurPicUrl:'',
 			songName:'',
 			songArtistsName:'',
-            currentLyric:2,
-            volume:0.0,
-            marginTop:150
+      currentLyric:2,
+      volume:0.0,
+      marginTop:150
 		}
 	},
 	computed:{
@@ -182,10 +179,12 @@ export default {
 				var that = this
 				//判断有没有歌词
 				if(response.data.lrc.lyric){
+					that.lyric[0]=""
 					var lyricAll = response.data.lrc.lyric.split('[')
-					for(let i=0;i<lyricAll.length;i++){
-						that.lyric[i] = lyricAll[i].split(']')[1]
-						that.lyricTime[i] = lyricAll[i].split(']')[0].split('.')[0]
+					console.log(lyricAll)
+					for(let i=1;i<lyricAll.length;i++){
+						that.lyric[i] = lyricAll[i].slice(10);
+						that.lyricTime[i] = lyricAll[i].slice(0,5);
 					}
 				}
 			})
@@ -203,7 +202,7 @@ export default {
 		setTimeFormat:function(time,receiveTime){
 			if(parseInt(time %60)<10){
 		        receiveTime = parseInt(time /60)+':0'+parseInt(time %60)
-		    }else if(parseInt(time %60)>10){
+		    }else{
 		        receiveTime = parseInt(time /60)+':'+parseInt(time %60)
 		    }
 		    return receiveTime
@@ -214,6 +213,7 @@ export default {
 		},
 		//返回
 		back:function(){
+			this.$router.go(-1);
 			this.$store.state.hidFoot = true
 		},
 		//上一首歌单
@@ -238,22 +238,20 @@ export default {
 			this.setLeft(e,type)
 		},
 		setLeft:function(event,type){
-			var range=document.getElementById(type)
-			var bar=document.getElementById(type+"-bar")
-			var maxw = range.offsetWidth-bar.offsetWidth
-			var rangex = range.offsetLeft;
-			var half = bar.offsetWidth/2
+			var target = event.target
+			var rangex = target.offsetLeft
+			var half = target.lastChild.offsetWidth/2
 			var left=event.touches[0].pageX-rangex-half;
-            this.render(event,left,type);
+      this.render(event,left,type);
 		},
 		render:function (event,value,type) {
 			var that=this
-			var range=document.getElementById(type)
-			var bar=document.getElementById(type+'-bar')
-			var maxw = range.offsetWidth-bar.offsetWidth
-			var progress=document.getElementById(type+'-progress')
+			var target = event.target
+			var bar = target.lastChild
+			var progress = target.firstChild
+			var maxw = target.offsetWidth-bar.offsetWidth
 			var audio = document.querySelector('#audio')
-            var left=value;
+		      	var left=value;
             if(left<=-5){
                 left=-5;
             }

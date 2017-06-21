@@ -51,7 +51,8 @@ export default {
 	},
 	methods:{
 		init:function(){
-			this.$store.state.hidNav = false
+			this.$store.state.hidNav = false;
+			this.$store.state.songListID = this.$route.params.id;
 		},
 		getTopListBriefResource: function(){
 			api.getTopListBriefResource().then((response) => {

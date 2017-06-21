@@ -18,7 +18,7 @@
 			<div class="recommend-playlist">
 				<p class="recommend-title"><i class="recommend-icon"></i>推荐歌单</p>
 				<div class="music-list-item" v-for="musicList in persRecoLists"> 
-					<div class="imgWrap">
+					<div class="imgWrapContainer">
 						<router-link @click.native="init()" :to="{name:'musicList',params: {id:musicList.id}}" class="imgWrap" v-bind:style="{backgroundImage:'url(' + musicList.picUrl + ')'}">
 							<p class="music-num"><i class="music-num-icon"></i> {{musicList.playCount}}</p>
 							<p class="music-user"><i class="music-user-icon"></i>{{musicList.author}}</p>

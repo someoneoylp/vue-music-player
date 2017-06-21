@@ -3,7 +3,7 @@
 		<p class="notFoundTips" v-if="notFound[2]">{{notFoundTips}}</p>
 		<ul v-else>
 			<li v-for="(playlist,index) in playlists" class="list-item">
-				<router-link :to="{name:'rankingEachPage',params:{id:playlist.id}}" class="music-title">
+				<router-link @click.native="init()" :to="{name:'rankingEachPage',params:{id:playlist.id}}" class="music-title">
 					<img :src="playlist.coverImgUrl" class="artist-img" alt="">
 					<p class="playlist-name">{{playlist.name}}</p>
 					<p class="playlist-singer">
@@ -34,6 +34,11 @@ export default {
 			searchKeyWord: state => state.searchKeyWord,
 			notFound: state=>state.notFound
 		})
+	},
+	methods:{
+		init(){
+			this.$store.state.songListID = this.$route.params.id;
+		}
 	}
 }
 </script>

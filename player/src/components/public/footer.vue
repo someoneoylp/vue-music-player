@@ -98,6 +98,12 @@ export default {
 			.then((response)=>{
 				this.musicUrl = response.data.data[0].url
 			})
+			.then(()=>{
+			  this.$store.state.playing = false
+			})
+			.then(()=>{
+			  this.$store.state.playing = true
+			})
 		},
 		//下一首
 		playNext:function(songListID,currentindex){

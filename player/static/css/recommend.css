@@ -1,0 +1,152 @@
+/*
+*个性推荐界面样式
+*/
+.music-content {
+  width: 100% !important;
+  /* 轮播图部分*/
+  /* 推荐音乐列表部分 */
+}
+.music-content:after {
+  content: '';
+  clear: both;
+  display: block;
+}
+.music-content .carousel-figure {
+  overflow: hidden;
+  width: 100%;
+  height: 9rem;
+  background: pink;
+  background-size: 100% 100%;
+}
+.music-content .carousel-figure .pic-ul {
+  height: 9rem;
+  position: relative;
+  transition: all .4s;
+}
+.music-content .carousel-figure .pic-ul .pic-list {
+  height: 9rem;
+  float: left;
+  transition: all .4s;
+}
+.music-content .carousel-figure .pic-ul .pic-list .pic-item {
+  width: 31.8rem;
+  height: 9rem;
+}
+.music-content .carousel-figure .carousel-items {
+  height: 1rem;
+  color: #ffffff;
+  position: absolute;
+  right: 0;
+  margin-top: -2rem;
+}
+.music-content .carousel-figure .carousel-items span {
+  width: 0.5rem;
+  height: 0.5rem;
+  display: inline-block;
+  border: 1px solid #ffffff;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0.3rem 0.5rem 0.3rem;
+  transition: all .5s;
+}
+.music-content .carousel-figure .carousel-items .carousel-active {
+  background: #ffffff;
+}
+.music-content .recommend-playlist {
+  margin: 2rem 0 0 0;
+}
+.music-content .recommend-playlist:after {
+  content: '';
+  clear: both;
+  display: block;
+}
+.music-content .recommend-playlist .music-list-item-sole {
+  width: 46%;
+  margin: 2%;
+  float: left;
+  height: 10rem;
+  background-size: 100% 100%;
+}
+.music-content .recommend-playlist .recommend-title {
+  font-size: 1.2rem;
+}
+.music-content .recommend-playlist .recommend-title i {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: -0.2rem 0.5rem 0 0.8rem;
+}
+.music-content .recommend-playlist .recommend-title .recommend-icon {
+  background: url(../img/reco.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .recommend-playlist .recommend-title .sole-icon {
+  background: url(../img/sole.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .recommend-playlist .recommend-title .news-icon {
+  background: url(../img/news2.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .recommend-playlist .recommend-title .station-icon {
+  background: url(../img/station.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .recommend-playlist .recommend-title .mv-icon {
+  background: url(../img/MV-re.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .music-list-item {
+  width: 29%;
+  margin: 2%;
+  float: left;
+  height: 10rem;
+  background-size: 100% 100%;
+}
+.music-content .imgWrapContainer {
+  width: 100%;
+}
+.music-content .imgWrapContainer .imgWrap {
+  overflow: hidden;
+  display: block !important;
+  background-size: 100% 100%;
+}
+.music-content .imgWrapContainer .imgWrap::after {
+  content: '';
+  margin-top: 100%;
+  display: block;
+}
+.music-content .imgWrapContainer .music-num {
+  width: 58%;
+  height: 1.6rem;
+  float: right;
+  line-height: 1.6rem;
+  font-size: 0.8rem;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.17);
+}
+.music-content .imgWrapContainer .music-num .music-num-icon {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  margin: 0 0.2rem;
+  vertical-align: middle;
+  background: url(../../src/assets/Headset.png) left center no-repeat;
+  background-size: 100% 100%;
+}
+.music-content .music-des {
+  font-family: "sans-serif";
+  margin: 0.4rem 0 0 0.2rem;
+  font-size: 0.8rem;
+  width: 100%;
+  height: 1.9rem;
+  line-height: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.music-content .sole-bottom {
+  width: 96% !important;
+}
+.music-content .recoMv {
+  width: 45% !important;
+}

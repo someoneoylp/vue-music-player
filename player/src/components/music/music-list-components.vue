@@ -55,7 +55,7 @@ import api from '../../api/index'
 export default {
 	data(){
 		return {
-			id:this.$route.params.id,
+			id: this.$route.params.id || this.$store.state.songListID ,
 			nickname : '',//歌单创建者名称
 			name : '',//歌单名称
 			coverImgUrl : '',//背景图片
@@ -74,8 +74,9 @@ export default {
 	computed:{
 		...mapState({
 			hidNav: state => state.hidNav,
+			recoListId: state => state.recoListId,
 			scrollToBelow:state=>state.scrollToBelow
-		})/*recoListId: state => state.recoListId,*/
+		})
 	},
  	mounted:function () {
 		this.getPlayList();
