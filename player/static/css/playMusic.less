@@ -3,9 +3,11 @@
 */
 .play-music{
 	width:100%;
+	height:100%;
 	.play-music-cover{
 		position:absolute;
 		width:100%;
+		height:100%;
 		background:url("../img/list-6.jpg") center center no-repeat;
 		background-size:100% 100%;
 		-webkit-filter: blur(5rem); 
@@ -68,6 +70,10 @@
 	    		width:80%;
 	    		margin:0 auto;
 	    		overflow:hidden;
+	    		.disk img{
+					transform-origin: center center;
+					transition:all .4s;
+	    		}
 	    		.stick{
 	    			position:relative;
 	    			z-index:104;

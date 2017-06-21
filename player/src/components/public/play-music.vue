@@ -15,7 +15,7 @@
 				<div class="disk-content" @click="showLyric()" v-show="!isShowLyric">
 					<i class="stick" :class="{ isPlay : playing}"></i>
 					<div class="disk">
-						<img :src="blurPicUrl" alt="">
+						<img class="diskImg" :src="blurPicUrl" alt="">
 					</div>
 				</div>
 				<div class="lyric" v-show="isShowLyric" @click="showLyric()">
@@ -101,9 +101,11 @@ export default {
 			blurPicUrl:'',
 			songName:'',
 			songArtistsName:'',
-      currentLyric:2,
-      volume:0.0,
-      marginTop:150
+			currentLyric:2,
+			volume:0.0,
+			marginTop:150,
+			diskR:'',//旋转定时器
+			degs:0//旋转角度
 		}
 	},
 	computed:{
@@ -119,6 +121,9 @@ export default {
 		currentindex(curVal,oldVal){
 			this.$store.state.hidFoot = false
 			this.getSongDetail()
+		},
+		playing(curVal,oldVal){
+			this.diskRotate()
 		},
 		//根据播放时间设置信息
 		playTime(curVal,oldVal){
@@ -162,6 +167,7 @@ export default {
 	 	this.$store.state.songListID = this.$store.state.songListID
 	 	this.$store.state.hidFoot = false
 	 	this.init()
+	 	this.diskRotate()
     },
 	methods:{
 		//获取歌单详情
@@ -181,7 +187,6 @@ export default {
 				if(response.data.lrc.lyric){
 					that.lyric[0]=""
 					var lyricAll = response.data.lrc.lyric.split('[')
-					console.log(lyricAll)
 					for(let i=1;i<lyricAll.length;i++){
 						that.lyric[i] = lyricAll[i].slice(10);
 						that.lyricTime[i] = lyricAll[i].slice(0,5);
@@ -210,6 +215,20 @@ export default {
 		//播放音乐，设置时间
 		playMusic:function(e){
 		    this.$store.state.playing = !this.$store.state.playing
+		},
+		//磁盘滚动
+		diskRotate:function(){
+			var diskImg = document.getElementsByClassName('diskImg')[0]
+			var that = this
+			if(this.$store.state.playing==true){
+				this.diskR = setInterval(function(){
+					diskImg.style.webkitTransform='rotate('+that.degs+'deg)'
+					++that.degs
+				},100)
+			}else{
+				//停止播放，清除定时器
+				window.clearInterval(this.diskR)
+			}
 		},
 		//返回
 		back:function(){
